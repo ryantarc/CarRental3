@@ -9,8 +9,6 @@ public class Main {
         Inventory.addCar(new Luxury("Ativa","A031",10,true,5,true));
         Inventory.addCar(new SUV("Ativa","A030",10,true,5,true,false));
 
-        for (Car car:Inventory){
 
-        }
     }
 }
