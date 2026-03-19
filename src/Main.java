@@ -9,6 +9,7 @@ public class Main {
         Inventory.addCar(new Luxury("Ativa","A031",10,true,5,true));
         Inventory.addCar(new SUV("Ativa","A030",10,true,5,true,false));
 
-
+        System.out.println("This is me trying to connect from PC");
+        System.out.println("testing out branches!");
     }
 }
