@@ -1,6 +1,8 @@
 package Vehicles;
+import java.io.*;
+import java.io.Serializable;
 
-public abstract class Car {
+public abstract class Car implements Serializable{
     protected String carID;
     private String model;
     private String carPlate;
