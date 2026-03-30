@@ -2,12 +2,14 @@ package Vehicles;
 
 import java.util.ArrayList;
 import java.io.*;
+import java.util.Scanner;
 
 public class InventoryManagement {
     private ArrayList<Car> inventory;
 
     public InventoryManagement() {
         inventory = new ArrayList<>();
+        loadFromFile();
 
     }
 
@@ -43,6 +45,27 @@ public class InventoryManagement {
         for (Car car: inventory){
             System.out.println(car.toString());
         }
+    }
+
+    public void addCarUI() {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("=== Add New Car ===");
+
+            System.out.print("Enter model: ");
+            String model = scanner.nextLine();
+
+            System.out.print("Enter plate number: ");
+            String plate = scanner.nextLine();
+
+            System.out.print("Enter daily rate: ");
+            double rate = scanner.nextDouble();
+
+            System.out.print("Is available? (true/false): ");
+            boolean status = scanner.nextBoolean();
+
+            System.out.print("Enter seating capacity: ");
+            int seats = scanner.nextInt();
+
     }
 }
 
