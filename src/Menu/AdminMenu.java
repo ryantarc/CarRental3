@@ -31,7 +31,7 @@ public class AdminMenu {
     }
     private void displayMenu() {
         System.out.println("\n===== ADMIN MENU =====");
-        System.out.println("1. Add SUV");
+        System.out.println("1. Add Car");
         System.out.println("2. View Inventory");
         System.out.println("3. Delete Car");
         System.out.println("0. Exit");
