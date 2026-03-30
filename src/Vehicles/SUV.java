@@ -14,5 +14,13 @@ public class SUV extends Car{
         carType = CARTYPE;
         carID = "S" + String.format("%02d", count++);
     }
-
+    @Override
+    public String toString() {
+        return String.format(
+                "%s | 4WD:%-5s | 3rdRow:%-5s",
+                super.toString(),
+                is4WD ? "Yes" : "No",
+                thirdRowSeating ? "Yes" : "No"
+        );
+    }
 }

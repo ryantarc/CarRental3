@@ -11,4 +11,13 @@ public class Luxury extends Car {
         carType = CARTYPE;
         carID = "L" + String.format("%02d", count++);
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s | Sunroof:%-5s",
+                super.toString(),
+                hasSunroof ? "Yes" : "No"
+        );
+    }
 }
