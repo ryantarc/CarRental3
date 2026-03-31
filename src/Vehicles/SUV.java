@@ -1,5 +1,7 @@
 package Vehicles;
 
+import java.util.Scanner;
+
 public class SUV extends Car{
     private boolean is4WD;
     private boolean thirdRowSeating;
@@ -23,4 +25,5 @@ public class SUV extends Car{
                 thirdRowSeating ? "Yes" : "No"
         );
     }
+
 }
