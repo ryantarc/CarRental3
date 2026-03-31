@@ -24,6 +24,9 @@ public class AdminMenu {
                 case 1 -> addCarUI();
                 case 2 -> viewInventory();
                 case 3 -> deleteCar();
+                case 4 -> changeCarStatus();
+                case 5 -> deleteCar();
+
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid choice!");
             }
@@ -35,6 +38,8 @@ public class AdminMenu {
         System.out.println("1. Add Car");
         System.out.println("2. View Inventory");
         System.out.println("3. Delete Car");
+        System.out.println("4. Change Car Status");
+        System.out.println("5. View Report");
         System.out.println("0. Exit");
     }
 
@@ -57,9 +62,9 @@ public class AdminMenu {
         int seats = input.getIntInput("Seating Capacity: ");
 
         switch (choice){
-            case 1 -> addCarSUV(model, plate, rate, status, seats);
+            case 1 -> addCarEco(model, plate, rate, status, seats);
             case 2 -> addCarLux(model, plate, rate, status, seats);
-            case 3 -> addCarEco(model, plate, rate, status, seats);
+            case 3 -> addCarSUV(model, plate, rate, status, seats);
         }
     }
 
@@ -92,5 +97,19 @@ public class AdminMenu {
         System.out.println("Coming Soon");
     }
 
+    private void changeCarStatus(){
+        String carID;
+        boolean status;
+        do {
+            viewInventory();
+            System.out.println("Enter Car ID of the car you would like to change: ");
+            carID = scanner.nextLine();
+            status = input.getBooleanInput("Change status into available (y) or reserved? (n)");
+            Inventory.checkCarID(carID,status);
+
+        }while (!Inventory.checkCarID(carID,status));
+
+
+    }
 
 }

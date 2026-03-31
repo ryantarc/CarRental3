@@ -36,7 +36,6 @@ public class InventoryManagement {
         }
     }
     public void displayInventory(){
-        System.out.println(inventory.size());
         System.out.printf(
                 "%-5s | %-8s | %-12s | %-10s | %-10s | %-10s | %-8s | Extras\n",
                 "ID", "Type", "Model", "Plate", "Rate", "Status", "Seats"
@@ -70,6 +69,22 @@ public class InventoryManagement {
 
     public void deleteCar(){
 
+    }
+
+    public void changeCarStatus(boolean status, Car car){
+        car.setStatus(status);
+        saveToFile();
+
+    }
+
+    public boolean checkCarID(String CarID, boolean status) {
+        for (Car car : inventory) {
+            if (CarID.equals(car.getCarID())) {
+                changeCarStatus(false,car);
+                return true;
+            }
+        }
+        return false;
     }
 }
 
