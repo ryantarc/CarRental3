@@ -30,7 +30,7 @@ public class InventoryManagement {
     public void loadFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(
                 new FileInputStream("cars.dat"))) {
-            inventory = (ArrayList<Car>) ois.readObject();
+            inventory = (ArrayList<Car>) ois.readObject(); //readObject is recursive so it will sekaligus read all obj into arraylist
         } catch (IOException | ClassNotFoundException e) {
             inventory = new ArrayList<>(); // fallback
         }
@@ -77,15 +77,16 @@ public class InventoryManagement {
 
     }
 
-    public boolean checkCarID(String CarID, boolean status) {
-        for (Car car : inventory) {
-            if (CarID.equals(car.getCarID())) {
-                changeCarStatus(false,car);
-                return true;
+    //!!!!! USEFUL METHOD can use when doing reservation and blablabla to find car
+    public Car findCar(String carID){
+        for (Car car: inventory){
+            if (car.getCarID().equals(carID)) {
+                return car;
             }
         }
-        return false;
+        return null;//not found
     }
+
 }
 
 

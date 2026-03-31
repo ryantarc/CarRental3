@@ -66,6 +66,7 @@ public class AdminMenu {
             case 2 -> addCarLux(model, plate, rate, status, seats);
             case 3 -> addCarSUV(model, plate, rate, status, seats);
         }
+        System.out.println();
     }
 
     public void addCarSUV(String model, String plate, double rate, boolean status, int seats){
@@ -75,12 +76,14 @@ public class AdminMenu {
         Inventory.addCar(suv);
         System.out.println("SUV added successfully!");
     }
+
     public void addCarLux(String model, String plate, double rate, boolean status, int seats){
         boolean hasSunroof = input.getBooleanInput("hasSunroof (y/n): ");
         Car lux = new Luxury(model, plate, rate, status, seats, hasSunroof);
         Inventory.addCar(lux);
         System.out.println("Luxury Car added successfully!");
     }
+
     public void addCarEco(String model, String plate, double rate, boolean status, int seats){
         double fuelEfficiency = input.getDoubleInput("Fuel Efficiency (km/l): ");
         Car eco = new Economy(model, plate, rate, status, seats,fuelEfficiency);
@@ -91,11 +94,13 @@ public class AdminMenu {
     private void viewInventory() {
         System.out.println("\n===== Inventory =====");
         Inventory.displayInventory();
+        System.out.println("=========================");
     }
 
     private void deleteCar() {
         System.out.println("Coming Soon");
     }
+
 
     private void changeCarStatus(){
         String carID;
@@ -104,12 +109,15 @@ public class AdminMenu {
             viewInventory();
             System.out.println("Enter Car ID of the car you would like to change: ");
             carID = scanner.nextLine();
-            status = input.getBooleanInput("Change status into available (y) or reserved? (n)");
-            Inventory.checkCarID(carID,status);
+            Inventory.findCar(carID);
+            if (Inventory.findCar(carID)==null){
+                System.out.println("Please enter valid Car ID");
+            }
+        }while (Inventory.findCar(carID)==null);
 
-        }while (!Inventory.checkCarID(carID,status));
-
-
+        status = input.getBooleanInput("Change status into available (y) or reserved? (n)");
+        Inventory.changeCarStatus(status,Inventory.findCar(carID));
+        System.out.println();
     }
 
 }
