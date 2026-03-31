@@ -94,11 +94,23 @@ public class AdminMenu {
     private void viewInventory() {
         System.out.println("\n===== Inventory =====");
         Inventory.displayInventory();
-        System.out.println("=========================");
     }
 
     private void deleteCar() {
-        System.out.println("Coming Soon");
+        String carID;
+        do {
+            viewInventory();
+            System.out.println("Enter Car ID of the car you would like to change: ");
+            carID = scanner.nextLine();
+            Inventory.findCar(carID);
+
+            if (Inventory.findCar(carID)==null){
+                System.out.println("Please enter valid Car ID");
+            }
+        }while (Inventory.findCar(carID)==null);
+        Car car = Inventory.findCar(carID);
+        Inventory.deleteCar(car);
+        System.out.println(car.getCarID() + " " + car.getModel() + " has been removed.1" );
     }
 
 

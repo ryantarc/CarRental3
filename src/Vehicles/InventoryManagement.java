@@ -67,8 +67,9 @@ public class InventoryManagement {
 
     }
 
-    public void deleteCar(){
-
+    public void deleteCar(Car car){
+        inventory.remove(car);
+        saveToFile();
     }
 
     public void changeCarStatus(boolean status, Car car){
