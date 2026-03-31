@@ -67,6 +67,10 @@ public class InventoryManagement {
             int seats = scanner.nextInt();
 
     }
+
+    public void deleteCar(){
+
+    }
 }
 
 

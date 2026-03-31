@@ -9,7 +9,7 @@ public class Luxury extends Car {
                     boolean hasSunroof){
         super(model, carPlate, dailyRate, status, seatingCapacity);
         carType = CARTYPE;
-        carID = "L" + String.format("%02d", count++);
+        carID = "L" + String.format("%02d", ++count);
     }
 
     @Override

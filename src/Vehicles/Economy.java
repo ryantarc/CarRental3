@@ -9,7 +9,7 @@ public class Economy extends Car{
                     double fuelEfficiency){
         super(model, carPlate, dailyRate, status, seatingCapacity);
         carType = CARTYPE;
-        carID = "E" + String.format("%02d", count++);
+        carID = "E" + String.format("%02d", ++count);
     }
     @Override
     public String toString() {

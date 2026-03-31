@@ -14,7 +14,7 @@ public class SUV extends Car{
         this.thirdRowSeating = thirdRowSeating;
         this.is4WD = is4WD;
         carType = CARTYPE;
-        carID = "S" + String.format("%02d", count++);
+        carID = "S" + String.format("%02d", ++count);
     }
     @Override
     public String toString() {
