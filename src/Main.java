@@ -14,7 +14,7 @@ public class Main {
         Scanner scanner = new Scanner (System.in);
         InventoryManagement Inventory = new InventoryManagement();
         MainMenu mainMenu = new MainMenu(scanner,Inventory);
-        System.out.println("Hello");
+        System.out.println("This is testing push n pull");
         mainMenu.start();
 
 
