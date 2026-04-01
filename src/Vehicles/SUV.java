@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class SUV extends Car{
     private boolean is4WD;
     private boolean thirdRowSeating;
-    private static int count = 0;
+    private static int count = 1;
     private final String CARTYPE = "SUV";
 
     public SUV (String model, String carPlate, double dailyRate, boolean status, int seatingCapacity,

@@ -1,21 +1,25 @@
 
-import Menu.AdminMenu;
-import Vehicles.*;
+import Managers.InventoryManager;
+import Menu.*;
+import java.util.Scanner;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-
-import Vehicles.*;
-import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
-        InventoryManagement Inventory = new InventoryManagement();
-        AdminMenu Menu = new AdminMenu();
-        Inventory.loadFromFile();
-        Menu.start();
-        Inventory.displayInventory();
+        System.out.println("test test Ryan");
+        System.out.println("test test Hom");
+        Scanner scanner = new Scanner (System.in);
+        InventoryManager Inventory = new InventoryManager();
+        MainMenu mainMenu = new MainMenu(scanner,Inventory);
+        System.out.println("This is testing push n pull");
+        mainMenu.start();
+
+
+        //add return system
+        //add reservation system
+        //reporting system -> date borrowed date returned fuel spent
+        //^^be a separate class called report
+        //add fuel tracking if possible
+        //fix persistency issue in car_ID
 
 
     }
