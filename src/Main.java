@@ -1,18 +1,13 @@
 
+import Managers.InventoryManager;
 import Menu.*;
-import Vehicles.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-import Vehicles.*;
-import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner (System.in);
-        InventoryManagement Inventory = new InventoryManagement();
+        InventoryManager Inventory = new InventoryManager();
         MainMenu mainMenu = new MainMenu(scanner,Inventory);
         System.out.println("This is testing push n pull");
         mainMenu.start();
