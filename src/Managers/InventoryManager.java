@@ -1,16 +1,28 @@
-package Vehicles;
+package Managers;
+
+import Vehicles.Car;
 
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Scanner;
 
-public class InventoryManagement {
+public class InventoryManager {
     private ArrayList<Car> inventory;
+    private FileManager fm;
+    private final String filename = "cars.dat";
 
-    public InventoryManagement() {
+    public InventoryManager() {
         inventory = new ArrayList<>();
+        fm = new FileManager();
         loadFromFile();
+    }
 
+    //redefine saveToFile to avoid human errors
+    public void saveToFile(){
+        fm.saveToFile(inventory,filename);
+    }
+    public void loadFromFile(){
+        inventory=fm.loadFromFile(filename);
     }
 
     public void addCar(Car car) {
@@ -18,23 +30,11 @@ public class InventoryManagement {
         saveToFile();
     }
 
-    public void saveToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(
-                new FileOutputStream("cars.dat"))) {
-            oos.writeObject(inventory);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void deleteCar(Car car){
+        inventory.remove(car);
+        saveToFile();
     }
 
-    public void loadFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(
-                new FileInputStream("cars.dat"))) {
-            inventory = (ArrayList<Car>) ois.readObject(); //readObject is recursive so it will sekaligus read all obj into arraylist
-        } catch (IOException | ClassNotFoundException e) {
-            inventory = new ArrayList<>(); // fallback
-        }
-    }
     public void displayInventory(){
         System.out.printf(
                 "%-5s | %-8s | %-12s | %-10s | %-10s | %-10s | %-8s | Extras\n",
@@ -67,15 +67,9 @@ public class InventoryManagement {
 
     }
 
-    public void deleteCar(Car car){
-        inventory.remove(car);
-        saveToFile();
-    }
-
     public void changeCarStatus(boolean status, Car car){
         car.setStatus(status);
         saveToFile();
-
     }
 
     //!!!!! USEFUL METHOD can use when doing reservation and blablabla to find car
@@ -87,6 +81,8 @@ public class InventoryManagement {
         }
         return null;//not found
     }
+
+
 
 }
 

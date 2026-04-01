@@ -1,14 +1,14 @@
 package Menu;
-import Vehicles.InventoryManagement;
+import Managers.InventoryManager;
 
 import java.util.Scanner;
 public class MainMenu {
     private AdminMenu adminMenu;
     private Scanner scanner;
-    private InventoryManagement inventory;
+    private InventoryManager inventory;
     private InputValidators input;
 
-    public MainMenu(Scanner scanner, InventoryManagement inventory){
+    public MainMenu(Scanner scanner, InventoryManager inventory){
         this.scanner = scanner;
         this.inventory = inventory;
         adminMenu = new AdminMenu(scanner,inventory);

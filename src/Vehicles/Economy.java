@@ -8,7 +8,8 @@ public class Economy extends Car{
     public Economy (String model, String carPlate, double dailyRate, boolean status, int seatingCapacity,
                     double fuelEfficiency){
         super(model, carPlate, dailyRate, status, seatingCapacity);
-        carType = CARTYPE;
+        this.fuelEfficiency = fuelEfficiency;
+        this.carType = CARTYPE;
         carID = "E" + String.format("%02d", count++);
     }
 
@@ -17,7 +18,7 @@ public class Economy extends Car{
     @Override
     public String toString() {
         return String.format(
-                "%s | Fuel: %.2f km/L",
+                "%s | Fuel Efficiency: %.2f km/L",
                 super.toString(),
                 fuelEfficiency
         );
