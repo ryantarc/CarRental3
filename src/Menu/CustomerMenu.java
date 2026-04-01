@@ -7,15 +7,18 @@ import java.util.Scanner;
 
 public class CustomerMenu {
 
+    private ReservationsManager reservationsManager;
     private InventoryManager Inventory;
     private Scanner scanner;
     private InputValidators input;
 
-    public CustomerMenu(Scanner scanner,InventoryManager Inventory) {
+    public CustomerMenu(Scanner scanner, InventoryManager Inventory, ReservationsManager reservationsManager) {
         this.Inventory = Inventory;
         this.scanner = scanner;
+        this.reservationsManager = reservationsManager;
         input = new InputValidators();
-        Inventory.loadFromFile(); // load once at start
+        Inventory.loadFromFile();
+        reservationsManager.loadFromFile();
     }
     public void start() {
         int choice;
@@ -99,7 +102,16 @@ public class CustomerMenu {
         String confirm = scanner.nextLine();
 
         if (confirm.equalsIgnoreCase("y")) {
-
+            Reservation newReservation = new Reservation(
+            selectedCar.getCarID(),
+            selectedCar.getCarType(),
+            selectedCar.getModel(),
+            selectedCar.getCarPlate(),
+            selectedCar.getDailyRate(),
+            rentTime
+            );
+            
+            reservationsManager.addReservation(newReservation);
             Inventory.changeCarStatus(false,Inventory.findCar(carIDNum));
             System.out.println("Reservation confirmed! Car has been reserved.");
         } else {
