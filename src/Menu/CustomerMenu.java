@@ -1,9 +1,8 @@
-
 package Menu;
 import Managers.*;
-import Vehicles.*;
+import Reservations.Reservation;
+import Vehicles.*;  // Add this import
 import java.util.Scanner;
-
 
 public class CustomerMenu {
 
@@ -20,26 +19,25 @@ public class CustomerMenu {
         Inventory.loadFromFile();
         reservationsManager.loadFromFile();
     }
+    
     public void start() {
         int choice;
 
         do {
             displayMenu();
-            choice =input.getIntInput("Enter choice: ");
+            choice = input.getIntInput("Enter choice: ");
 
             switch (choice) {
-                case 1 -> ReserveCar(); //addCarUI();
+                case 1 -> ReserveCar();
                 case 2 -> viewInventory();
-                case 3 -> ReturnCar(); //DeleteCar();
-
-
-
+                case 3 -> ReturnCar();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid choice!");
             }
 
         } while (choice != 0);
     }
+    
     private void displayMenu() {
         System.out.println("\n===== MENU =====");
         System.out.println("1. Reserve New Car");
@@ -47,7 +45,6 @@ public class CustomerMenu {
         System.out.println("3. Return Car");
         System.out.println("0. Exit");
     }
-
 
     private void ReserveCar() {
         System.out.println("\nType of Car");
@@ -103,36 +100,29 @@ public class CustomerMenu {
 
         if (confirm.equalsIgnoreCase("y")) {
             Reservation newReservation = new Reservation(
-            selectedCar.getCarID(),
-            selectedCar.getCarType(),
-            selectedCar.getModel(),
-            selectedCar.getCarPlate(),
-            selectedCar.getDailyRate(),
-            rentTime
+                selectedCar.getCarID(),
+                selectedCar.getCarType(),
+                selectedCar.getModel(),
+                selectedCar.getCarPlate(),
+                selectedCar.getDailyRate(),
+                rentTime
             );
             
             reservationsManager.addReservation(newReservation);
-            Inventory.changeCarStatus(false,Inventory.findCar(carIDNum));
+            Inventory.changeCarStatus(false, Inventory.findCar(carIDNum));
             System.out.println("Reservation confirmed! Car has been reserved.");
         } else {
             System.out.println("Reservation cancelled.");
         }
     }
 
-
-
     private void viewInventory() {
         System.out.println("\n===== Inventory =====");
         Inventory.displayInventory();
     }
 
-    private void ReturnCar() { //Enos u do this part
-
-        System.out.println("Enos DO" );
+    private void ReturnCar() {
+        // Enos will implement this
+        System.out.println("Enos DO");
     }
-
-
-
-
-
 }
