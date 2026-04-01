@@ -4,6 +4,7 @@ import Managers.InventoryManager;
 import java.util.Scanner;
 public class MainMenu {
     private AdminMenu adminMenu;
+    private CustomerMenu customerMenu;
     private Scanner scanner;
     private InventoryManager inventory;
     private InputValidators input;
@@ -13,6 +14,7 @@ public class MainMenu {
         this.inventory = inventory;
         adminMenu = new AdminMenu(scanner,inventory);
         input = new InputValidators();
+        customerMenu = new CustomerMenu(scanner,inventory);
     }
     public void start () {
         userSelection();
@@ -27,7 +29,7 @@ public class MainMenu {
             num = input.getIntInput("Enter corresponding number: ");
 
             switch(num){
-                case 1 -> System.out.println("coming soon");
+                case 1 -> customerMenu.start();
                 case 2 -> adminMenu.start();
                 case 0 -> System.out.println("Exiting System");
                 default -> System.out.println("Invalid number, please enter within range 1-2");
