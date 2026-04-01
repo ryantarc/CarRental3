@@ -1,11 +1,12 @@
 
 import Managers.InventoryManager;
 import Menu.*;
-
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("Test Test Hom");
+
         Scanner scanner = new Scanner (System.in);
         InventoryManager Inventory = new InventoryManager();
         MainMenu mainMenu = new MainMenu(scanner,Inventory);
