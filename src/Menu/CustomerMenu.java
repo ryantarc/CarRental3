@@ -54,9 +54,9 @@ public class CustomerMenu {
         int choice = input.getIntInput("Enter choice: ");
 
         switch (choice){
-            case 1 -> Inventory.displayInventoryEconomy();
-            case 2 -> Inventory.displayInventoryLuxury();
-            case 3 -> Inventory.displayInventorySUV();
+            case 1 -> Inventory.displayInventory("ECONOMY");
+            case 2 -> Inventory.displayInventory("LUXURY");
+            case 3 -> Inventory.displayInventory("SUV");
             default -> {
                 System.out.println("Invalid choice!");
                 return;

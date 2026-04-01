@@ -46,6 +46,21 @@ public class InventoryManager {
         }
     }
 
+    public void displayInventory(String cartype){
+        System.out.printf(
+                "%-5s | %-8s | %-12s | %-10s | %-10s | %-10s | %-8s | Extras\n",
+                "ID", "Type", "Model", "Plate", "Rate", "Status", "Seats"
+        );
+        System.out.println("-------------------------------------------------------------------------------------------");
+        for (Car car: inventory){
+            if (car.getCarType().equals(cartype)){
+                System.out.println(car.toString());
+            }
+        }
+        System.out.println("Press Enter to continue\n\n");
+
+    }
+
     public void addCarUI() {
             Scanner scanner = new Scanner(System.in);
             System.out.println("=== Add New Car ===");
@@ -98,49 +113,6 @@ public class InventoryManager {
 
         System.out.println("Car is available for rent.");
         return true;
-    }
-    public void displayInventorySUV(){
-        System.out.printf(
-                "%-5s | %-8s | %-12s | %-10s | %-10s | %-10s | %-8s | Extras\n",
-                "ID", "Type", "Model", "Plate", "Rate", "Status", "Seats"
-        );
-        System.out.println("-------------------------------------------------------------------------------------------");
-        for (Car car: inventory){
-            if (car.getCarType().equals("SUV")){
-                System.out.println(car.toString());
-            }
-        }
-        System.out.println("Press Enter to continue\n\n");
-    }
-
-
-    public void displayInventoryEconomy(){
-        System.out.printf(
-                "%-5s | %-8s | %-12s | %-10s | %-10s | %-10s | %-8s | Extras\n",
-                "ID", "Type", "Model", "Plate", "Rate", "Status", "Seats"
-        );
-        System.out.println("-------------------------------------------------------------------------------------------");
-        for (Car car: inventory){
-            if (car.getCarType().equals("ECONOMY")){
-                System.out.println(car.toString());
-            }
-        }
-        System.out.println("Press Enter to continue\n\n");
-    }
-
-
-    public void displayInventoryLuxury(){
-        System.out.printf(
-                "%-5s | %-8s | %-12s | %-10s | %-10s | %-10s | %-8s | Extras\n",
-                "ID", "Type", "Model", "Plate", "Rate", "Status", "Seats"
-        );
-        System.out.println("-------------------------------------------------------------------------------------------");
-        for (Car car: inventory){
-            if (car.getCarType().equals("LUXURY")){
-                System.out.println(car.toString());
-            }
-        }
-        System.out.println("Press Enter to continue\n\n");
     }
 
 
