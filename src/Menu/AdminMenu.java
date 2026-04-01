@@ -8,6 +8,8 @@ public class AdminMenu {
     private Scanner scanner;
     private InputValidators input;
 
+    //might move the stuff below into a different class for code neatness
+
     public AdminMenu(Scanner scanner, InventoryManager Inventory) {
         this.Inventory = Inventory;
         this.scanner = scanner;
@@ -26,7 +28,7 @@ public class AdminMenu {
                 case 2 -> viewInventory();
                 case 3 -> deleteCar();
                 case 4 -> changeCarStatus();
-                case 5 -> deleteCar();
+                case 5 -> System.out.println("coming soon");
 
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid choice!");
@@ -111,9 +113,8 @@ public class AdminMenu {
         }while (Inventory.findCar(carID)==null);
         Car car = Inventory.findCar(carID);
         Inventory.deleteCar(car);
-        System.out.println(car.getCarID() + " " + car.getModel() + " has been removed.1" );
+        System.out.println(car.getCarID() + " " + car.getModel() + " has been removed" );
     }
-
 
     private void changeCarStatus(){
         String carID;
