@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("test test Ryan");
         Scanner scanner = new Scanner (System.in);
         InventoryManager Inventory = new InventoryManager();
         MainMenu mainMenu = new MainMenu(scanner,Inventory);
