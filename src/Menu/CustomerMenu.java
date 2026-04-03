@@ -107,7 +107,7 @@ public class CustomerMenu {
                 selectedCar.getDailyRate(),
                 rentTime
             );
-            
+
             reservationsManager.addReservation(newReservation);
             Inventory.changeCarStatus(false, Inventory.findCar(carIDNum));
             System.out.println("Reservation confirmed! Car has been reserved.");
@@ -123,6 +123,31 @@ public class CustomerMenu {
 
     private void ReturnCar() {
         // Enos will implement this
-        System.out.println("Enos DO");
+        reservationsManager.displayReservations();
+
+        System.out.print("Enter Car ID to return: ");
+        String carID = scanner.nextLine();
+
+        System.out.print("Rented for (days): ");
+        int realRentalDays = input.getIntInput("");
+
+        System.out.print("Any damages? (y/n): ");
+        boolean damaged = input.getBooleanInput("");
+
+        System.out.print("Fuel Level Low? (y/n): ");
+        boolean lowFuel = input.getBooleanInput("");
+
+        reservationsManager.returnCar(carID,realRentalDays,damaged,lowFuel);
+
+        Car car = Inventory.findCar(carID);
+        if (car != null){
+            Inventory.changeCarStatus(true,car);
+
+
+        }
+
+
+
+
     }
 }
