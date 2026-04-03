@@ -69,7 +69,8 @@ public class ReservationsManager {
                 r.setPenalty(penalty);
                 r.setRealDays(realRentalDays);
 
-                System.out.println("Returned Processed. Penalty : RM" + penalty);
+                System.out.println("Returned Processed.\n\nPenalty : RM" + penalty);
+                System.out.println("Total Cost : " + (r.getTotalCost() + penalty));
                 return;
 
 

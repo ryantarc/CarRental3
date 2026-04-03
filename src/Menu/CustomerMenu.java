@@ -128,14 +128,11 @@ public class CustomerMenu {
         System.out.print("Enter Car ID to return: ");
         String carID = scanner.nextLine();
 
-        System.out.print("Rented for (days): ");
-        int realRentalDays = input.getIntInput("");
+        int realRentalDays = input.getIntInput("Rented for (days): ");
 
-        System.out.print("Any damages? (y/n): ");
-        boolean damaged = input.getBooleanInput("");
+        boolean damaged = input.getBooleanInput("Any damages? (y/n): ");
 
-        System.out.print("Fuel Level Low? (y/n): ");
-        boolean lowFuel = input.getBooleanInput("");
+        boolean lowFuel = input.getBooleanInput("Fuel Level Low? (y/n): ");
 
         reservationsManager.returnCar(carID,realRentalDays,damaged,lowFuel);
 
