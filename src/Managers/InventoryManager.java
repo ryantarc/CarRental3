@@ -114,8 +114,6 @@ public class InventoryManager {
         System.out.println("Car is available for rent.");
         return true;
     }
-
-
 }
 
 
