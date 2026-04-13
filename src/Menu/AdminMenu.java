@@ -61,7 +61,15 @@ public class AdminMenu {
         String plate = scanner.nextLine();
 
         double rate = input.getDoubleInput("Daily Rate: ");
-        boolean status = input.getBooleanInput("Available (y/n): ");
+        boolean temp = input.getBooleanInput("Available (y/n): ");
+        Car.carStatus status;
+
+        if (temp){
+            status = Car.carStatus.AVAILABLE;
+        } else {
+            status = Car.carStatus.RENTED;
+        }
+
         int seats = input.getIntInput("Seating Capacity: ");
 
         switch (choice){
@@ -72,7 +80,7 @@ public class AdminMenu {
         System.out.println();
     }
 
-    public void addCarSUV(String model, String plate, double rate, boolean status, int seats){
+    public void addCarSUV(String model, String plate, double rate, Car.carStatus status, int seats){
         boolean is4WD = input.getBooleanInput("4WD (y/n): ");
         boolean thirdRow = input.getBooleanInput("Third row seating (y/n): ");
         Car suv = new SUV(model, plate, rate, status, seats, is4WD, thirdRow);
@@ -80,14 +88,14 @@ public class AdminMenu {
         System.out.println("SUV added successfully!");
     }
 
-    public void addCarLux(String model, String plate, double rate, boolean status, int seats){
+    public void addCarLux(String model, String plate, double rate, Car.carStatus status, int seats){
         boolean hasSunroof = input.getBooleanInput("hasSunroof (y/n): ");
         Car lux = new Luxury(model, plate, rate, status, seats, hasSunroof);
         Inventory.addCar(lux);
         System.out.println("Luxury Car added successfully!");
     }
 
-    public void addCarEco(String model, String plate, double rate, boolean status, int seats){
+    public void addCarEco(String model, String plate, double rate, Car.carStatus status, int seats){
         double fuelEfficiency = input.getDoubleInput("Fuel Efficiency (km/l): ");
         Car eco = new Economy(model, plate, rate, status, seats,fuelEfficiency);
         Inventory.addCar(eco);
@@ -118,7 +126,7 @@ public class AdminMenu {
 
     private void changeCarStatus(){
         String carID;
-        boolean status;
+        Car.carStatus status = null;
         do {
             viewInventory();
             System.out.println("Enter Car ID of the car you would like to change: ");
@@ -128,8 +136,19 @@ public class AdminMenu {
                 System.out.println("Please enter valid Car ID");
             }
         }while (Inventory.findCar(carID)==null);
+        System.out.println("1. Available");
+        System.out.println("2. Rented");
+        System.out.println("3. Under Maintenance");
+        System.out.println("4. Pending Return");
+        int num = input.getIntInput("Enter:Input");
 
-        status = input.getBooleanInput("Change status into available (y) or reserved? (n)");
+        switch (num){
+            case 1 -> status = Car.carStatus.AVAILABLE;
+            case 2 -> status = Car.carStatus.RENTED;
+            case 3 -> status = Car.carStatus.MAINTENANCE;
+            case 4 -> status = Car.carStatus.PENDING;
+            default -> System.out.println("Invalid choice");
+        }
         Inventory.changeCarStatus(status,Inventory.findCar(carID));
         System.out.println();
     }

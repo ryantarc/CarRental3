@@ -1,22 +1,29 @@
 package Vehicles;
-import Vehicles.*;
-import java.io.*;
 import java.io.Serializable;
-import java.util.Scanner;
+
+
 public abstract class Car implements Serializable{
+
+    public enum carStatus{
+        RENTED,
+        PENDING,
+        AVAILABLE,
+        MAINTENANCE,
+    }
+
     protected String carID;
     private String model;
     private String carPlate;
     private double dailyRate;
     protected String carType;
-    private boolean Status;
+    private carStatus Status;
     private int seatingCapacity;
 
-    public Car(String model, String carPlate, double dailyRate, boolean status, int seatingCapacity) {
+    public Car(String model, String carPlate, double dailyRate, carStatus status, int seatingCapacity) {
         this.model = model;
         this.carPlate = carPlate;
         this.dailyRate = dailyRate;
-        Status = status;
+        this.Status = status;
         this.seatingCapacity = seatingCapacity;
     }
 
@@ -52,11 +59,11 @@ public abstract class Car implements Serializable{
         this.carType = carType;
     }
 
-    public boolean isStatus() {
+    public carStatus getStatus() {
         return Status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(carStatus status) {
         Status = status;
     }
 
@@ -85,7 +92,7 @@ public abstract class Car implements Serializable{
                 model,
                 carPlate,
                 dailyRate,
-                (Status ? "Available" : "Rented"),
+                Status,
                 seatingCapacity
         );
     }

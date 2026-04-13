@@ -13,6 +13,10 @@ public class Reservation implements Serializable {
     private int rentalDays;
     private double totalCost;
     private String reservationDate;
+    private boolean returned;
+    private int realRentalDays;
+    private double penalty;
+
     
     // Constructor
     public Reservation(String carID, String carType, String carModel, 
@@ -25,6 +29,9 @@ public class Reservation implements Serializable {
         this.rentalDays = rentalDays;
         this.totalCost = dailyRate * rentalDays;
         this.reservationDate = java.time.LocalDate.now().toString();
+        this.returned = false;
+        this.penalty = 0;
+        this.realRentalDays = rentalDays;
     }
     
     // Getters
@@ -36,10 +43,16 @@ public class Reservation implements Serializable {
     public int getRentalDays() { return rentalDays; }
     public double getTotalCost() { return totalCost; }
     public String getReservationDate() { return reservationDate; }
+    public boolean isReturned() { return returned; }
+
+    public void setReturned(boolean returned) { this.returned = returned; }
+    public void setPenalty(double penalty) { this.penalty = penalty; }
+    public void setRealDays(int realRentalDays) { this.realRentalDays = realRentalDays; }
+
     
     @Override
     public String toString() {
-        return "Car: " + carModel + " | Days: " + rentalDays + 
+        return "Car ID: " + carID + " | Car: " + carModel + " | Days: " + rentalDays +
                " | Total: RM" + totalCost + " | Date: " + reservationDate;
     }
 }
