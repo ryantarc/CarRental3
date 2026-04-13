@@ -1,7 +1,7 @@
 package Menu;
 import Managers.*;
 import Reservations.Reservation;
-import Vehicles.*;  // Add this import
+import Vehicles.*;// Add this import
 import java.util.Scanner;
 
 public class CustomerMenu {
@@ -76,7 +76,7 @@ public class CustomerMenu {
             return;
         }
 
-        if (!selectedCar.isStatus()) {
+        if (selectedCar.getStatus()!= Car.carStatus.AVAILABLE) {
             System.out.println("Car is not available for rent!");
             return;
         }
@@ -109,7 +109,7 @@ public class CustomerMenu {
             );
 
             reservationsManager.addReservation(newReservation);
-            Inventory.changeCarStatus(false, Inventory.findCar(carIDNum));
+            Inventory.changeCarStatus(Car.carStatus.RENTED, Inventory.findCar(carIDNum));
             System.out.println("Reservation confirmed! Car has been reserved.");
         } else {
             System.out.println("Reservation cancelled.");
@@ -138,13 +138,7 @@ public class CustomerMenu {
 
         Car car = Inventory.findCar(carID);
         if (car != null){
-            Inventory.changeCarStatus(true,car);
-
-
+            Inventory.changeCarStatus(Car.carStatus.AVAILABLE,car);
         }
-
-
-
-
     }
 }

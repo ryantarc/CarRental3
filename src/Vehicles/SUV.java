@@ -8,7 +8,7 @@ public class SUV extends Car{
     private static int count = 1;
     private final String CARTYPE = "SUV";
 
-    public SUV (String model, String carPlate, double dailyRate, boolean status, int seatingCapacity,
+    public SUV (String model, String carPlate, double dailyRate, Car.carStatus status, int seatingCapacity,
                    boolean is4WD,boolean thirdRowSeating){
         super(model, carPlate, dailyRate, status, seatingCapacity);
         this.thirdRowSeating = thirdRowSeating;

@@ -82,8 +82,8 @@ public class InventoryManager {
 
     }
 
-    public void changeCarStatus(boolean status, Car car){
-        car.setStatus(status);
+    public void changeCarStatus(Car.carStatus status,Car car){
+        car.setStatus(status); //fix this later
         saveToFile();
     }
 
@@ -106,7 +106,7 @@ public class InventoryManager {
             return false;
         }
 
-        if (!car.isStatus()) {
+        if (car.getStatus()!= Car.carStatus.AVAILABLE) { //FIX IT
             System.out.println("Car is currently not available for rent.");
             return false;
         }
