@@ -1,7 +1,7 @@
 package Menu;
 import Managers.*;
 import Reservations.Reservation;
-import Vehicles.*;  // Add this import
+import Vehicles.*;// Add this import
 import java.util.Scanner;
 
 public class CustomerMenu {
@@ -76,7 +76,7 @@ public class CustomerMenu {
             return;
         }
 
-        if (!selectedCar.isStatus()) {
+        if (selectedCar.getStatus()!= Car.carStatus.AVAILABLE) {
             System.out.println("Car is not available for rent!");
             return;
         }
@@ -107,9 +107,9 @@ public class CustomerMenu {
                 selectedCar.getDailyRate(),
                 rentTime
             );
-            
+
             reservationsManager.addReservation(newReservation);
-            Inventory.changeCarStatus(false, Inventory.findCar(carIDNum));
+            Inventory.changeCarStatus(Car.carStatus.RENTED, Inventory.findCar(carIDNum));
             System.out.println("Reservation confirmed! Car has been reserved.");
         } else {
             System.out.println("Reservation cancelled.");
@@ -123,6 +123,22 @@ public class CustomerMenu {
 
     private void ReturnCar() {
         // Enos will implement this
-        System.out.println("Enos DO");
+        reservationsManager.displayReservations();
+
+        System.out.print("Enter Car ID to return: ");
+        String carID = scanner.nextLine();
+
+        int realRentalDays = input.getIntInput("Rented for (days): ");
+
+        boolean damaged = input.getBooleanInput("Any damages? (y/n): ");
+
+        boolean lowFuel = input.getBooleanInput("Fuel Level Low? (y/n): ");
+
+        reservationsManager.returnCar(carID,realRentalDays,damaged,lowFuel);
+
+        Car car = Inventory.findCar(carID);
+        if (car != null){
+            Inventory.changeCarStatus(Car.carStatus.AVAILABLE,car);
+        }
     }
 }

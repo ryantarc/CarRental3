@@ -1,4 +1,6 @@
 package Menu;
+import Vehicles.Car;
+
 import java.util.Scanner;
 
 public class InputValidators {
