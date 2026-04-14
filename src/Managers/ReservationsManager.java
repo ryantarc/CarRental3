@@ -80,4 +80,37 @@ public class ReservationsManager {
         System.out.println("Reservations not found");
 
     }
+
+
+
+    public void cancelCar(String carID, int realRentalDays, boolean damaged, boolean lowFuel){
+        for (Reservation r : reservations){
+            if (r.getCarID().equals(carID) && !r.isReturned()) {
+                double penalty = 0;
+                if (realRentalDays > r.getRentalDays()) {
+                    int lateDays = realRentalDays - r.getRentalDays();
+                    penalty += lateDays * r.getDailyRate() * 2.00;
+                }
+                if (damaged) {
+                    penalty += 100;
+                }
+                if (lowFuel) {
+                    penalty += 50;
+                }
+
+                r.setReturned(true);
+                r.setPenalty(penalty);
+                r.setRealDays(realRentalDays);
+
+                System.out.println("Returned Processed.\n\nPenalty : RM" + penalty);
+                System.out.println("Total Cost : " + ("RM0.00" + penalty));
+                return;
+
+
+            }
+
+        }
+        System.out.println("Reservations not found");
+
+    }
 }

@@ -31,6 +31,7 @@ public class CustomerMenu {
                 case 1 -> ReserveCar();
                 case 2 -> viewInventory();
                 case 3 -> ReturnCar();
+                case 4 -> CancelCar();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid choice!");
             }
@@ -43,6 +44,7 @@ public class CustomerMenu {
         System.out.println("1. Reserve New Car");
         System.out.println("2. View Inventory");
         System.out.println("3. Return Car");
+        System.out.println("4. Cancel Reservation");
         System.out.println("0. Exit");
     }
 
@@ -135,6 +137,22 @@ public class CustomerMenu {
         boolean lowFuel = input.getBooleanInput("Fuel Level Low? (y/n): ");
 
         reservationsManager.returnCar(carID,realRentalDays,damaged,lowFuel);
+
+        Car car = Inventory.findCar(carID);
+        if (car != null){
+            Inventory.changeCarStatus(Car.carStatus.AVAILABLE,car);
+        }
+    }
+
+        private void CancelCar() {
+        // Hom doing
+        reservationsManager.displayReservations();
+
+        System.out.print("Enter Car ID to return: ");
+        String carID = scanner.nextLine();
+
+
+        reservationsManager.cancelCar(carID, 0, false, false);
 
         Car car = Inventory.findCar(carID);
         if (car != null){
