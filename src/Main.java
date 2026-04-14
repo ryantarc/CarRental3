@@ -19,8 +19,6 @@ public class Main {
         //reporting system -> date borrowed date returned fuel spent
         //^^be a separate class called report
         //add fuel tracking if possible
-        //fix persistency issue in car_ID
-
 
     }
 }
