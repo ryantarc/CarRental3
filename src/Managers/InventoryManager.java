@@ -1,6 +1,6 @@
 package Managers;
 
-import Vehicles.Car;
+import Vehicles.*;
 
 import java.util.ArrayList;
 import java.io.*;
@@ -23,6 +23,7 @@ public class InventoryManager {
     }
     public void loadFromFile(){
         inventory=fm.loadFromFile(filename);
+        updateCarCounts();
     }
 
     public void addCar(Car car) {
@@ -113,6 +114,25 @@ public class InventoryManager {
 
         System.out.println("Car is available for rent.");
         return true;
+    }
+
+    private void updateCarCounts() {
+        int maxE = 0, maxS = 0, maxL = 0;
+
+        for (Car car : inventory) {
+            String id = car.getCarID();
+            int num = Integer.parseInt(id.substring(1));
+
+            switch (id.charAt(0)) {
+                case 'E' -> maxE = Math.max(maxE, num);
+                case 'S' -> maxS = Math.max(maxS, num);
+                case 'L' -> maxL = Math.max(maxL, num);
+            }
+        }
+
+        Economy.setCount(maxE + 1);
+        SUV.setCount(maxS + 1);
+        Luxury.setCount(maxL + 1);
     }
 }
 

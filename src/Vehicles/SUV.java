@@ -16,6 +16,11 @@ public class SUV extends Car{
         carType = CARTYPE;
         carID = "S" + String.format("%02d", count++);
     }
+
+    public static void setCount(int value) {
+        count = value;
+    }
+
     @Override
     public String toString() {
         return String.format(

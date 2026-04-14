@@ -13,6 +13,9 @@ public class Economy extends Car{
         carID = "E" + String.format("%02d", count++);
     }
 
+    public static void setCount(int value) {
+        count = value;
+    }
 
 
     @Override
