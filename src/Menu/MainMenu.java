@@ -1,5 +1,6 @@
 package Menu;
 import Managers.InventoryManager;
+import Managers.ReportsManager;
 import Managers.ReservationsManager;
 
 import java.util.Scanner;
@@ -11,12 +12,12 @@ public class MainMenu {
     private InputValidators input;
     private ReservationsManager reservations;
 
-    public MainMenu(Scanner scanner, InventoryManager inventory){
+    public MainMenu(Scanner scanner, InventoryManager inventory, ReportsManager reportsManager){
         this.scanner = scanner;
         this.inventory = inventory;
-        adminMenu = new AdminMenu(scanner,inventory);
         input = new InputValidators();
         reservations = new ReservationsManager();
+        adminMenu = new AdminMenu(scanner,inventory, reportsManager, reservations);
         customerMenu = new CustomerMenu(scanner,inventory,reservations);
     }
     public void start () {

@@ -1,21 +1,31 @@
 package Menu;
 import Managers.InventoryManager;
+import Managers.ReportsManager;
+import Managers.ReservationsManager;
+import Reservations.Reservation;
 import Vehicles.*;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class AdminMenu {
     private InventoryManager Inventory;
+    private ReportsManager reportsManager;
     private Scanner scanner;
     private InputValidators input;
+    private ReservationsManager reservationsManager;
 
     //might move the stuff below into a different class for code neatness
 
-    public AdminMenu(Scanner scanner, InventoryManager Inventory) {
+    // AdminMenu.java - update constructor
+    public AdminMenu(Scanner scanner, InventoryManager Inventory, ReportsManager reportsManager, ReservationsManager reservationsManager) {
         this.Inventory = Inventory;
         this.scanner = scanner;
+        this.reportsManager = reportsManager;
+        this.reservationsManager = reservationsManager;  // ADD THIS
         input = new InputValidators();
-        Inventory.loadFromFile(); // load once at start
+        Inventory.loadFromFile();
     }
+
     public void start() {
         int choice;
 
@@ -28,7 +38,7 @@ public class AdminMenu {
                 case 2 -> viewInventory();
                 case 3 -> deleteCar();
                 case 4 -> changeCarStatus();
-                case 5 -> System.out.println("coming soon");
+                case 5 -> viewReport();
 
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid choice!");
@@ -140,7 +150,7 @@ public class AdminMenu {
         System.out.println("2. Rented");
         System.out.println("3. Under Maintenance");
         System.out.println("4. Pending Return");
-        int num = input.getIntInput("Enter:Input");
+        int num = input.getIntInput("Enter Input: ");
 
         switch (num){
             case 1 -> status = Car.carStatus.AVAILABLE;
@@ -151,6 +161,11 @@ public class AdminMenu {
         }
         Inventory.changeCarStatus(status,Inventory.findCar(carID));
         System.out.println();
+    }
+
+    // Update viewReport()
+    private void viewReport() {
+        reportsManager.generateReport(reservationsManager.getAllReservations());
     }
 
 }
