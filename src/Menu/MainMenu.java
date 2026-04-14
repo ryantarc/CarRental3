@@ -16,7 +16,7 @@ public class MainMenu {
         this.scanner = scanner;
         this.inventory = inventory;
         input = new InputValidators();
-        reservations = new ReservationsManager();
+        reservations = new ReservationsManager(inventory);
         adminMenu = new AdminMenu(scanner,inventory, reportsManager, reservations);
         customerMenu = new CustomerMenu(scanner,inventory,reservations);
     }

@@ -31,7 +31,7 @@ public class AdminMenu {
 
         do {
             displayMenu();
-            choice =input.getIntInput("Enter choice: ");
+            choice =input.getIntInput("\nEnter choice: ");
 
             switch (choice) {
                 case 1 -> addCarUI();
@@ -121,17 +121,22 @@ public class AdminMenu {
         String carID;
         do {
             viewInventory();
-            System.out.println("Enter Car ID of the car you would like to change: ");
+            System.out.println("\nEnter Car ID of the car you would like to change [x to exit]: ");
             carID = scanner.nextLine();
             Inventory.findCar(carID);
+
+            if (carID.equalsIgnoreCase("x")){
+                System.out.println("Returning to Menu...");
+                return;
+            }
 
             if (Inventory.findCar(carID)==null){
                 System.out.println("Please enter valid Car ID");
             }
+
         }while (Inventory.findCar(carID)==null);
         Car car = Inventory.findCar(carID);
         Inventory.deleteCar(car);
-        System.out.println(car.getCarID() + " " + car.getModel() + " has been removed" );
     }
 
     private void changeCarStatus(){

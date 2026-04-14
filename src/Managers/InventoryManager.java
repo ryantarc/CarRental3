@@ -32,8 +32,14 @@ public class InventoryManager {
     }
 
     public void deleteCar(Car car){
+        if (car.getStatus() == Car.carStatus.RENTED) {
+            System.out.println("Cannot delete car. It is currently rented.");
+            return;
+        }
+
         inventory.remove(car);
         saveToFile();
+        System.out.println(car.getCarID() + " " + car.getModel() + " has been removed" );
     }
 
     public void displayInventory(){
