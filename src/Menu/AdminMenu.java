@@ -52,8 +52,11 @@ public class AdminMenu {
         System.out.println("1.Economy");
         System.out.println("2.Luxury");
         System.out.println("3.SUV");
+        System.out.println("0.Exit");
         int choice = input.getIntInput("Enter choice: ");
-
+        if (choice == 0){
+            return;
+        }
         System.out.print("Model: ");
         String model = scanner.nextLine();
 
