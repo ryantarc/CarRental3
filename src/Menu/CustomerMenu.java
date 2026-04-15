@@ -125,9 +125,8 @@ public class CustomerMenu {
 
     private void ReturnCar() {
         // Enos will implement this
-        boolean hasActive = reservationsManager.displayReservations();
 
-        if (!hasActive) {
+        if (!reservationsManager.displayReservations()) {
             return;
         }
 
@@ -143,8 +142,6 @@ public class CustomerMenu {
         boolean lowFuel = input.getBooleanInput("Fuel Level Low? (y/n): ");
 
         reservationsManager.returnCar(carID, realRentalDays, damaged, lowFuel);
-
-
         Inventory.changeCarStatus(Car.carStatus.AVAILABLE, car);
         reservationsManager.saveToFile();
 
