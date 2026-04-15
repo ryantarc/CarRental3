@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public abstract class Car implements Serializable{
 
-    public enum carStatus{
+    public enum CarStatus {
         RENTED,
         PENDING,
         AVAILABLE,
@@ -16,10 +16,10 @@ public abstract class Car implements Serializable{
     private String carPlate;
     private double dailyRate;
     protected String carType;
-    private carStatus Status;
+    private CarStatus Status;
     private int seatingCapacity;
 
-    public Car(String model, String carPlate, double dailyRate, carStatus status, int seatingCapacity) {
+    public Car(String model, String carPlate, double dailyRate, CarStatus status, int seatingCapacity) {
         this.model = model;
         this.carPlate = carPlate;
         this.dailyRate = dailyRate;
@@ -59,11 +59,11 @@ public abstract class Car implements Serializable{
         this.carType = carType;
     }
 
-    public carStatus getStatus() {
+    public CarStatus getStatus() {
         return Status;
     }
 
-    public void setStatus(carStatus status) {
+    public void setStatus(CarStatus status) {
         Status = status;
     }
 

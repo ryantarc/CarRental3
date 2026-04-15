@@ -3,8 +3,7 @@ package Managers;
 import Vehicles.*;
 
 import java.util.ArrayList;
-import java.io.*;
-import java.util.Scanner;
+
 
 public class InventoryManager {
     private ArrayList<Car> inventory;
@@ -32,7 +31,7 @@ public class InventoryManager {
     }
 
     public void deleteCar(Car car){
-        if (car.getStatus() == Car.carStatus.RENTED) {
+        if (car.getStatus() == Car.CarStatus.RENTED) {
             System.out.println("Cannot delete car. It is currently rented.");
             return;
         }
@@ -65,31 +64,9 @@ public class InventoryManager {
             }
         }
         System.out.println("Press Enter to continue\n\n");
-
     }
 
-    public void addCarUI() {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("=== Add New Car ===");
-
-            System.out.print("Enter model: ");
-            String model = scanner.nextLine();
-
-            System.out.print("Enter plate number: ");
-            String plate = scanner.nextLine();
-
-            System.out.print("Enter daily rate: ");
-            double rate = scanner.nextDouble();
-
-            System.out.print("Is available? (true/false): ");
-            boolean status = scanner.nextBoolean();
-
-            System.out.print("Enter seating capacity: ");
-            int seats = scanner.nextInt();
-
-    }
-
-    public void changeCarStatus(Car.carStatus status,Car car){
+    public void changeCarStatus(Car.CarStatus status, Car car){
         car.setStatus(status); //fix this later
         saveToFile();
     }
@@ -113,7 +90,7 @@ public class InventoryManager {
             return false;
         }
 
-        if (car.getStatus()!= Car.carStatus.AVAILABLE) { //FIX IT
+        if (car.getStatus()!= Car.CarStatus.AVAILABLE) { //FIX IT
             System.out.println("Car is currently not available for rent.");
             return false;
         }
