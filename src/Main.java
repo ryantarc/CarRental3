@@ -6,15 +6,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("test test Ryan");
-        System.out.println("test test Hom");
         Scanner scanner = new Scanner (System.in);
         InventoryManager Inventory = new InventoryManager();
         ReportsManager reportsManager = new ReportsManager();
         MainMenu mainMenu = new MainMenu(scanner,Inventory, reportsManager);
         System.out.println("This is testing push n pull");
         mainMenu.start();
-
 
         //add return system
         //add reservation system

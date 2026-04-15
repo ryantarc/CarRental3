@@ -8,17 +8,20 @@ public class ReservationsManager {
     private final FileManager fm;
     private final String filename = "reservations.dat";
 
-    public ReservationsManager() {
+    public ReservationsManager(InventoryManager inventory) {
         reservations = new ArrayList<>();
         fm = new FileManager();
-        loadFromFile();
+        loadFromFile(inventory);
     }
     
-    public void loadFromFile() {
+    public void loadFromFile(InventoryManager inventory) {
         reservations = fm.loadFromFile(filename);
         if (reservations == null) {
             reservations = new ArrayList<>();
         }
+        reservations.removeIf(r -> inventory.findCar(r.getCarID()) == null);
+
+        saveToFile();
     }
     
     public void saveToFile() {
@@ -34,19 +37,24 @@ public class ReservationsManager {
         return reservations;
     }
 
-    public void displayReservations() {
-        if (reservations.isEmpty()) {
-            System.out.print("No Reservation has been made yet");
-        }
-        else {
-            System.out.println("===== Reservations =====");
+    public boolean displayReservations() {
+        boolean hasRented = false;
 
-            for (Reservation r : reservations) {
-                if (!r.isReturned()) {
-                    System.out.println(r);
-                }
+        System.out.println("\n===== Reservations =====");
+
+        for (Reservation r : reservations) {
+            if (!r.isReturned()) {
+                System.out.println(r);
+                hasRented = true;
             }
         }
+
+        if (!hasRented) {
+            System.out.println("\nNo active reservations currently.");
+        }
+
+        return hasRented;
+
     }
 
 
