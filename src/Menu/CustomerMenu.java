@@ -17,32 +17,34 @@ public class CustomerMenu {
         this.reservationsManager = reservationsManager;
         input = new InputValidators();
         Inventory.loadFromFile();
-        reservationsManager.loadFromFile();
+        reservationsManager.loadFromFile(Inventory);
     }
-    
+
     public void start() {
         int choice;
 
         do {
             displayMenu();
-            choice = input.getIntInput("Enter choice: ");
+            choice = input.getIntInput("\nEnter choice: ");
 
             switch (choice) {
                 case 1 -> ReserveCar();
                 case 2 -> viewInventory();
                 case 3 -> ReturnCar();
+                case 4 -> CancelCar();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid choice!");
             }
 
         } while (choice != 0);
     }
-    
+
     private void displayMenu() {
         System.out.println("\n===== MENU =====");
         System.out.println("1. Reserve New Car");
         System.out.println("2. View Inventory");
         System.out.println("3. Return Car");
+        System.out.println("4. Cancel Reservation");
         System.out.println("0. Exit");
     }
 
@@ -53,7 +55,7 @@ public class CustomerMenu {
         System.out.println("3. SUV");
         int choice = input.getIntInput("Enter choice: ");
 
-        switch (choice){
+        switch (choice) {
             case 1 -> Inventory.displayInventory("ECONOMY");
             case 2 -> Inventory.displayInventory("LUXURY");
             case 3 -> Inventory.displayInventory("SUV");
@@ -76,7 +78,7 @@ public class CustomerMenu {
             return;
         }
 
-        if (selectedCar.getStatus()!= Car.carStatus.AVAILABLE) {
+        if (selectedCar.getStatus() != Car.carStatus.AVAILABLE) {
             System.out.println("Car is not available for rent!");
             return;
         }
@@ -100,12 +102,12 @@ public class CustomerMenu {
 
         if (confirm.equalsIgnoreCase("y")) {
             Reservation newReservation = new Reservation(
-                selectedCar.getCarID(),
-                selectedCar.getCarType(),
-                selectedCar.getModel(),
-                selectedCar.getCarPlate(),
-                selectedCar.getDailyRate(),
-                rentTime
+                    selectedCar.getCarID(),
+                    selectedCar.getCarType(),
+                    selectedCar.getModel(),
+                    selectedCar.getCarPlate(),
+                    selectedCar.getDailyRate(),
+                    rentTime
             );
 
             reservationsManager.addReservation(newReservation);
@@ -123,22 +125,54 @@ public class CustomerMenu {
 
     private void ReturnCar() {
         // Enos will implement this
-        reservationsManager.displayReservations();
+        boolean hasActive = reservationsManager.displayReservations();
 
-        System.out.print("Enter Car ID to return: ");
+        if (!hasActive) {
+            return;
+        }
+
+        System.out.print("\n\nEnter Car ID to return: ");
         String carID = scanner.nextLine();
-
+        Car car = Inventory.findCar(carID);
+        if (car == null) {
+            System.out.println("Invalid Car ID. Returning...");
+            return;
+        }
         int realRentalDays = input.getIntInput("Rented for (days): ");
-
         boolean damaged = input.getBooleanInput("Any damages? (y/n): ");
-
         boolean lowFuel = input.getBooleanInput("Fuel Level Low? (y/n): ");
 
-        reservationsManager.returnCar(carID,realRentalDays,damaged,lowFuel);
+        reservationsManager.returnCar(carID, realRentalDays, damaged, lowFuel);
 
-        Car car = Inventory.findCar(carID);
-        if (car != null){
-            Inventory.changeCarStatus(Car.carStatus.AVAILABLE,car);
+
+        Inventory.changeCarStatus(Car.carStatus.AVAILABLE, car);
+        reservationsManager.saveToFile();
+
+    }
+
+    private void CancelCar() {
+        // Hom doing
+        boolean hasActive = reservationsManager.displayReservations();
+
+        if (!hasActive) {
+            return;
         }
+
+        System.out.print("\n\nEnter Car ID to return: ");
+        String carID = scanner.nextLine();
+        Car car = Inventory.findCar(carID);
+        if (car == null) {
+            System.out.println("Invalid Car ID. Returning...");
+            return;
+        }
+
+        reservationsManager.cancelCar(carID, 0,false,false);
+
+        System.out.println("\nReservation Cancelled.");
+
+
+        Inventory.changeCarStatus(Car.carStatus.AVAILABLE, car);
+        reservationsManager.saveToFile();
+
     }
 }

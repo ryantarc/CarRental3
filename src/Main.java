@@ -1,5 +1,6 @@
 
 import Managers.InventoryManager;
+import Managers.ReportsManager;
 import Menu.*;
 import java.util.Scanner;
 
@@ -7,7 +8,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner (System.in);
         InventoryManager Inventory = new InventoryManager();
-        MainMenu mainMenu = new MainMenu(scanner,Inventory);
+        ReportsManager reportsManager = new ReportsManager();
+        MainMenu mainMenu = new MainMenu(scanner,Inventory, reportsManager);
         System.out.println("This is testing push n pull");
         mainMenu.start();
 
