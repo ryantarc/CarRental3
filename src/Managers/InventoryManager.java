@@ -1,7 +1,6 @@
 package Managers;
 
 import Vehicles.*;
-
 import java.util.ArrayList;
 
 
@@ -116,6 +115,10 @@ public class InventoryManager {
         Economy.setCount(maxE + 1);
         SUV.setCount(maxS + 1);
         Luxury.setCount(maxL + 1);
+    }
+
+    public boolean isEmpty() {
+        return inventory.isEmpty();
     }
 }
 

@@ -1,36 +1,47 @@
 package Menu;
-import Managers.InventoryManager;
-import Managers.ReportsManager;
-import Managers.ReservationsManager;
+
+import Managers.*;
 import Reservations.Reservation;
 import Vehicles.*;
 import java.util.Scanner;
 
 public class AdminMenu {
-    private InventoryManager Inventory;
+    private InventoryManager inventory;
     private ReportsManager reportsManager;
     private Scanner scanner;
     private InputValidators input;
     private ReservationsManager reservationsManager;
 
-    //might move the stuff below into a different class for code neatness
+    public AdminMenu(Scanner scanner, InventoryManager inventory,
+                     ReportsManager reportsManager,
+                     ReservationsManager reservationsManager) {
 
-    // AdminMenu.java - update constructor
-    public AdminMenu(Scanner scanner, InventoryManager Inventory, ReportsManager reportsManager, ReservationsManager reservationsManager) {
-        this.Inventory = Inventory;
+        this.inventory = inventory;
         this.scanner = scanner;
         this.reportsManager = reportsManager;
-        this.reservationsManager = reservationsManager;  // ADD THIS
+        this.reservationsManager = reservationsManager;
         input = new InputValidators();
-        Inventory.loadFromFile();
+
+        inventory.loadFromFile();
     }
 
     public void start() {
         int choice;
 
         do {
-            displayMenu();
-            choice =input.getIntInput("\nEnter choice: ");
+            printHeader("ADMIN MENU");
+
+            System.out.println(" 1. Add Car");
+            System.out.println(" 2. View Inventory");
+            System.out.println(" 3. Delete Car");
+            System.out.println(" 4. Change Car Status");
+            System.out.println(" 5. View Report");
+            System.out.println(" 6. View Reservations");
+            System.out.println(" 7. Review Pending Returns");
+            System.out.println(" 0. Back");
+            System.out.println("________________________________");
+
+            choice = input.getIntInput(" Select option: ");
 
             switch (choice) {
                 case 1 -> addCarUI();
@@ -40,197 +51,252 @@ public class AdminMenu {
                 case 5 -> viewReport();
                 case 6 -> viewReservation();
                 case 7 -> reviewPendingReservations();
-                case 0 -> System.out.println("Exiting system...");
-                default -> System.out.println("Invalid choice!");
+                case 0 -> System.out.println("Returning...");
+                default -> System.out.println("Invalid option.");
             }
 
         } while (choice != 0);
     }
-    private void displayMenu() {
-        System.out.println("\n===== ADMIN MENU =====");
-        System.out.println("1. Add Car");
-        System.out.println("2. View Inventory");
-        System.out.println("3. Delete Car");
-        System.out.println("4. Change Car Status");
-        System.out.println("5. View Report");
-        System.out.println("6. Display Reservations");
-        System.out.println("7. Review Pending Reservations");
-        System.out.println("0. Exit");
-    }
 
-
+    // ================= ADD CAR =================
     private void addCarUI() {
-        System.out.println("\nType of Car");
-        System.out.println("1.Economy");
-        System.out.println("2.Luxury");
-        System.out.println("3.SUV");
-        System.out.println("0.Exit");
-        int choice = input.getIntInput("Enter choice: ");
-        if (choice == 0){
-            return;
-        }
-        System.out.print("Model: ");
+        printHeader("ADD CAR");
+
+        System.out.println(" 1. Economy");
+        System.out.println(" 2. Luxury");
+        System.out.println(" 3. SUV");
+        System.out.println(" 0. Back");
+
+        int choice = input.getIntInput(" Select type: ");
+        if (choice == 0) return;
+
+        System.out.print(" Model           : ");
         String model = scanner.nextLine();
 
-        System.out.print("Plate: ");
+        System.out.print(" Plate Number    : ");
         String plate = scanner.nextLine();
 
-        double rate = input.getDoubleInput("Daily Rate: ");
-        boolean temp = input.getBooleanInput("Available (y/n): ");
-        Car.CarStatus status;
+        double rate = input.getDoubleInput(" Daily Rate      : ");
+        boolean available = input.getBooleanInput(" Available (y/n) : ");
 
-        if (temp){
-            status = Car.CarStatus.AVAILABLE;
-        } else {
-            status = Car.CarStatus.RENTED;
-        }
+        Car.CarStatus status = available ? Car.CarStatus.AVAILABLE : Car.CarStatus.RENTED;
 
-        int seats = input.getIntInput("Seating Capacity: ");
+        int seats = input.getIntInput(" Seating Capacity: ");
 
-        switch (choice){
+        switch (choice) {
             case 1 -> addCarEco(model, plate, rate, status, seats);
             case 2 -> addCarLux(model, plate, rate, status, seats);
             case 3 -> addCarSUV(model, plate, rate, status, seats);
+            default -> System.out.println("Invalid choice.");
         }
-        System.out.println();
+
+        pause();
     }
 
-    public void addCarSUV(String model, String plate, double rate, Car.CarStatus status, int seats){
-        boolean is4WD = input.getBooleanInput("4WD (y/n): ");
-        boolean thirdRow = input.getBooleanInput("Third row seating (y/n): ");
+    public void addCarSUV(String model, String plate, double rate,
+                         Car.CarStatus status, int seats) {
+
+        boolean is4WD = input.getBooleanInput(" 4WD (y/n): ");
+        boolean thirdRow = input.getBooleanInput(" Third row seating (y/n): ");
+
         Car suv = new SUV(model, plate, rate, status, seats, is4WD, thirdRow);
-        Inventory.addCar(suv);
-        System.out.println("SUV added successfully!");
+        inventory.addCar(suv);
+
+        System.out.println("\nSUV added successfully.");
     }
 
-    public void addCarLux(String model, String plate, double rate, Car.CarStatus status, int seats){
-        boolean hasSunroof = input.getBooleanInput("hasSunroof (y/n): ");
+    public void addCarLux(String model, String plate, double rate,
+                         Car.CarStatus status, int seats) {
+
+        boolean hasSunroof = input.getBooleanInput(" Sunroof (y/n): ");
+
         Car lux = new Luxury(model, plate, rate, status, seats, hasSunroof);
-        Inventory.addCar(lux);
-        System.out.println("Luxury Car added successfully!");
+        inventory.addCar(lux);
+
+        System.out.println("\nLuxury car added successfully.");
     }
 
-    public void addCarEco(String model, String plate, double rate, Car.CarStatus status, int seats){
-        double fuelEfficiency = input.getDoubleInput("Fuel Efficiency (km/l): ");
-        Car eco = new Economy(model, plate, rate, status, seats,fuelEfficiency);
-        Inventory.addCar(eco);
-        System.out.println("Economy Car added successfully!");
+    public void addCarEco(String model, String plate, double rate,
+                         Car.CarStatus status, int seats) {
+
+        double fuelEfficiency = input.getDoubleInput(" Fuel Efficiency (km/l): ");
+
+        Car eco = new Economy(model, plate, rate, status, seats, fuelEfficiency);
+        inventory.addCar(eco);
+
+        System.out.println("\nEconomy car added successfully.");
     }
 
+    // ================= VIEW INVENTORY =================
     private void viewInventory() {
-        System.out.println("\n===== Inventory =====");
-        Inventory.displayInventory();
-    }
-
-    private void viewReservation(){
-        System.out.println("=======VIEW RESERVATIONS=======");
-        System.out.println("1.All Reservations");
-        System.out.println("2.Active Reservations");
-        System.out.println("3.Pending Reservations");
-        System.out.println("4.Cancelled Reservations");
-        System.out.println("5.Completed Reservations");
-        System.out.println("0.Exit");
-        int choice = input.getIntInput("Enter choice: ");
-        if (choice == 0){
+        printHeader("INVENTORY");
+        if (inventory.isEmpty()) {
+            System.out.println("\nInventory is empty.");
+            pause();
             return;
         }
-        switch (choice){
-            case 1: System.out.println("======Reservations=====");
-                reservationsManager.displayReservations();
-                break;
-            case 2: System.out.println("======Active Reservations=====");
-                reservationsManager.displayReservations(Reservation.ReservationStatus.ACTIVE);
-                break;
-            case 3: System.out.println("======Pending Reservations=====");
-                reservationsManager.displayReservations(Reservation.ReservationStatus.PENDING_RETURN);
-                break;
-            case 4: System.out.println("======Cancelled Reservations=====");
-                reservationsManager.displayReservations(Reservation.ReservationStatus.CANCELLED);
-                break;
-            case 5: System.out.println("======Completed Reservations=====");
-                reservationsManager.displayReservations(Reservation.ReservationStatus.COMPLETED);
-                break;
-            default:
-                System.out.println("Exiting...");
-        }
+        inventory.displayInventory();
+        pause();
     }
 
-    private void reviewPendingReservations(){
-        System.out.println("======Reservations=======");
+    // ================= VIEW RESERVATIONS =================
+    private void viewReservation() {
+        printHeader("VIEW RESERVATIONS");
+
+        System.out.println(" 1. All");
+        System.out.println(" 2. Active");
+        System.out.println(" 3. Pending Return");
+        System.out.println(" 4. Cancelled");
+        System.out.println(" 5. Completed");
+        System.out.println(" 0. Back");
+
+        int choice = input.getIntInput(" Select option: ");
+        if (choice == 0) return;
+
+        switch (choice) {
+            case 1 -> reservationsManager.displayReservations();
+            case 2 -> reservationsManager.displayReservations(Reservation.ReservationStatus.ACTIVE);
+            case 3 -> reservationsManager.displayReservations(Reservation.ReservationStatus.PENDING_RETURN);
+            case 4 -> reservationsManager.displayReservations(Reservation.ReservationStatus.CANCELLED);
+            case 5 -> reservationsManager.displayReservations(Reservation.ReservationStatus.COMPLETED);
+            default -> System.out.println("Invalid option.");
+        }
+
+        pause();
+    }
+
+    // ================= REVIEW RETURNS =================
+    private void reviewPendingReservations() {
+
+        printHeader("PENDING RETURNS");
+        if (!reservationsManager.hasReservations(Reservation.ReservationStatus.PENDING_RETURN)) {
+            System.out.println("No pending returns currently.");
+            pause();
+            return;
+        }
+
         reservationsManager.displayReservations(Reservation.ReservationStatus.PENDING_RETURN);
 
-        System.out.print("\nEnter Car ID: ");
+        System.out.print("\n Enter Car ID: ");
         String carID = scanner.nextLine();
-        Car car = Inventory.findCar(carID);
+
+        Car car = inventory.findCar(carID);
         Reservation reservation = reservationsManager.findPendingReservation(carID);
-        if (car == null) {
-            System.out.println("Invalid Car ID. Returning...");
+
+        if (car == null || reservation == null) {
+            System.out.println("Invalid Car ID.");
             return;
         }
-        int realRentalDays = input.getIntInput("Rented for (days): ");
-        boolean damaged = input.getBooleanInput("Any damages? (y/n): ");
-        boolean lowFuel = input.getBooleanInput("Fuel Level Low? (y/n): ");
-        reservationsManager.returnCar(carID, realRentalDays, damaged, lowFuel);
-        reservationsManager.changeReservationStatus(Reservation.ReservationStatus.COMPLETED,reservation);
-        Inventory.changeCarStatus(Car.CarStatus.AVAILABLE, car);
+
+        int days = input.getIntInput(" Rented days: ");
+        boolean damaged = input.getBooleanInput(" Damaged (y/n): ");
+        boolean lowFuel = input.getBooleanInput(" Low fuel (y/n): ");
+
+        reservationsManager.returnCar(carID, days, damaged, lowFuel);
+        reservationsManager.changeReservationStatus(
+                Reservation.ReservationStatus.COMPLETED, reservation);
+
+        inventory.changeCarStatus(Car.CarStatus.AVAILABLE, car);
         reservationsManager.saveToFile();
 
+        System.out.println("\nReturn processed.");
+        pause();
     }
 
+    // ================= DELETE =================
     private void deleteCar() {
         String carID;
+
+        if (inventory.isEmpty()) {
+            System.out.println("\nInventory is empty.");
+            pause();
+            return;
+        }
+
         do {
             viewInventory();
-            System.out.println("\nEnter Car ID of the car you would like to change [x to exit]: ");
+            System.out.print("\n Enter Car ID to delete (x to cancel): ");
             carID = scanner.nextLine();
-            Inventory.findCar(carID);
 
-            if (carID.equalsIgnoreCase("x")){
-                System.out.println("Returning to Menu...");
+            if (carID.equalsIgnoreCase("x")) return;
+
+            if (inventory.findCar(carID) == null) {
+                System.out.println("Invalid Car ID.");
+            }
+
+        } while (inventory.findCar(carID) == null);
+
+        inventory.deleteCar(inventory.findCar(carID));
+        pause();
+    }
+
+    // ================= CHANGE STATUS =================
+    private void changeCarStatus() {
+        String carID;
+
+        if (inventory.isEmpty()) {
+            System.out.println("\nInventory is empty.");
+            pause();
+            return;
+        }
+
+        do {
+            viewInventory();
+            System.out.print("\n Enter Car ID [x to exit]: ");
+            carID = scanner.nextLine();
+
+            if (carID.equalsIgnoreCase("x")) {
                 return;
             }
 
-            if (Inventory.findCar(carID)==null){
-                System.out.println("Please enter valid Car ID");
+            if (inventory.findCar(carID) == null) {
+                System.out.println("Invalid Car ID.");
             }
 
-        }while (Inventory.findCar(carID)==null);
-        Car car = Inventory.findCar(carID);
-        Inventory.deleteCar(car);
-    }
 
-    private void changeCarStatus(){
-        String carID;
-        Car.CarStatus status = null;
-        do {
-            viewInventory();
-            System.out.println("Enter Car ID of the car you would like to change: ");
-            carID = scanner.nextLine();
-            Inventory.findCar(carID);
-            if (Inventory.findCar(carID)==null){
-                System.out.println("Please enter valid Car ID");
-            }
-        }while (Inventory.findCar(carID)==null);
-        System.out.println("1. Available");
-        System.out.println("2. Rented");
-        System.out.println("3. Under Maintenance");
-        System.out.println("4. Pending Return");
-        int num = input.getIntInput("Enter Input: ");
+        } while (inventory.findCar(carID) == null);
 
-        switch (num){
-            case 1 -> status = Car.CarStatus.AVAILABLE;
-            case 2 -> status = Car.CarStatus.RENTED;
-            case 3 -> status = Car.CarStatus.MAINTENANCE;
-            case 4 -> status = Car.CarStatus.PENDING;
-            default -> System.out.println("Invalid choice");
+        System.out.println(" 1. Available");
+        System.out.println(" 2. Rented");
+        System.out.println(" 3. Maintenance");
+        System.out.println(" 4. Pending Return");
+
+        int choice = input.getIntInput(" Select status: ");
+
+        Car.CarStatus status = switch (choice) {
+            case 1 -> Car.CarStatus.AVAILABLE;
+            case 2 -> Car.CarStatus.RENTED;
+            case 3 -> Car.CarStatus.MAINTENANCE;
+            case 4 -> Car.CarStatus.PENDING;
+            default -> null;
+        };
+
+        if (status != null) {
+            inventory.changeCarStatus(status, inventory.findCar(carID));
+            System.out.println("\nStatus updated.");
+        } else {
+            System.out.println("Invalid option.");
         }
-        Inventory.changeCarStatus(status,Inventory.findCar(carID));
-        System.out.println();
+
+        pause();
     }
 
-    // Update viewReport()
+    // ================= REPORT =================
     private void viewReport() {
+        printHeader("REPORT");
         reportsManager.generateReport(reservationsManager.getAllReservations());
+        pause();
     }
 
+    // ================= UI =================
+    private void printHeader(String title) {
+        System.out.println("\n================================");
+        System.out.printf("        %s%n", title);
+        System.out.println("================================");
+    }
+
+    private void pause() {
+        System.out.print("\nPress ENTER to continue...");
+        scanner.nextLine();
+    }
 }
