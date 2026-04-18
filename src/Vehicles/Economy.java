@@ -5,7 +5,7 @@ public class Economy extends Car{
     private static int count = 1;
     private final String CARTYPE = "ECONOMY";
 
-    public Economy (String model, String carPlate, double dailyRate, Car.carStatus status, int seatingCapacity,
+    public Economy (String model, String carPlate, double dailyRate, CarStatus status, int seatingCapacity,
                     double fuelEfficiency){
         super(model, carPlate, dailyRate, status, seatingCapacity);
         this.fuelEfficiency = fuelEfficiency;
@@ -13,6 +13,9 @@ public class Economy extends Car{
         carID = "E" + String.format("%02d", count++);
     }
 
+    public static void setCount(int value) {
+        count = value;
+    }
 
 
     @Override

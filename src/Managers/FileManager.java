@@ -15,7 +15,6 @@ public class FileManager {
         }
     }
 
-
     public <T> ArrayList<T> loadFromFile(String filename) { //returns an arraylist of loaded objects
         try (ObjectInputStream ois = new ObjectInputStream(
                 new FileInputStream(filename))) {

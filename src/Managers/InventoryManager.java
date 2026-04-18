@@ -1,10 +1,8 @@
 package Managers;
 
-import Vehicles.Car;
-
+import Vehicles.*;
 import java.util.ArrayList;
-import java.io.*;
-import java.util.Scanner;
+
 
 public class InventoryManager {
     private ArrayList<Car> inventory;
@@ -23,6 +21,7 @@ public class InventoryManager {
     }
     public void loadFromFile(){
         inventory=fm.loadFromFile(filename);
+        updateCarCounts();
     }
 
     public void addCar(Car car) {
@@ -31,8 +30,14 @@ public class InventoryManager {
     }
 
     public void deleteCar(Car car){
+        if (car.getStatus() == Car.CarStatus.RENTED) {
+            System.out.println("Cannot delete car. It is currently rented.");
+            return;
+        }
+
         inventory.remove(car);
         saveToFile();
+        System.out.println(car.getCarID() + " " + car.getModel() + " has been removed" );
     }
 
     public void displayInventory(){
@@ -58,31 +63,9 @@ public class InventoryManager {
             }
         }
         System.out.println("Press Enter to continue\n\n");
-
     }
 
-    public void addCarUI() {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("=== Add New Car ===");
-
-            System.out.print("Enter model: ");
-            String model = scanner.nextLine();
-
-            System.out.print("Enter plate number: ");
-            String plate = scanner.nextLine();
-
-            System.out.print("Enter daily rate: ");
-            double rate = scanner.nextDouble();
-
-            System.out.print("Is available? (true/false): ");
-            boolean status = scanner.nextBoolean();
-
-            System.out.print("Enter seating capacity: ");
-            int seats = scanner.nextInt();
-
-    }
-
-    public void changeCarStatus(Car.carStatus status,Car car){
+    public void changeCarStatus(Car.CarStatus status, Car car){
         car.setStatus(status); //fix this later
         saveToFile();
     }
@@ -106,13 +89,36 @@ public class InventoryManager {
             return false;
         }
 
-        if (car.getStatus()!= Car.carStatus.AVAILABLE) { //FIX IT
+        if (car.getStatus()!= Car.CarStatus.AVAILABLE) { //FIX IT
             System.out.println("Car is currently not available for rent.");
             return false;
         }
 
         System.out.println("Car is available for rent.");
         return true;
+    }
+
+    private void updateCarCounts() {
+        int maxE = 0, maxS = 0, maxL = 0;
+
+        for (Car car : inventory) {
+            String id = car.getCarID();
+            int num = Integer.parseInt(id.substring(1));
+
+            switch (id.charAt(0)) {
+                case 'E' -> maxE = Math.max(maxE, num);
+                case 'S' -> maxS = Math.max(maxS, num);
+                case 'L' -> maxL = Math.max(maxL, num);
+            }
+        }
+
+        Economy.setCount(maxE + 1);
+        SUV.setCount(maxS + 1);
+        Luxury.setCount(maxL + 1);
+    }
+
+    public boolean isEmpty() {
+        return inventory.isEmpty();
     }
 }
 

@@ -1,8 +1,10 @@
 package Menu;
-import Managers.InventoryManager;
-import Managers.ReservationsManager;
 
+import Managers.InventoryManager;
+import Managers.ReportsManager;
+import Managers.ReservationsManager;
 import java.util.Scanner;
+
 public class MainMenu {
     private AdminMenu adminMenu;
     private CustomerMenu customerMenu;
@@ -11,32 +13,76 @@ public class MainMenu {
     private InputValidators input;
     private ReservationsManager reservations;
 
-    public MainMenu(Scanner scanner, InventoryManager inventory){
+    public MainMenu(Scanner scanner, InventoryManager inventory, ReportsManager reportsManager) {
         this.scanner = scanner;
         this.inventory = inventory;
-        adminMenu = new AdminMenu(scanner,inventory);
         input = new InputValidators();
-        reservations = new ReservationsManager();
-        customerMenu = new CustomerMenu(scanner,inventory,reservations);
+        reservations = new ReservationsManager(inventory);
+        adminMenu = new AdminMenu(scanner, inventory, reportsManager, reservations);
+        customerMenu = new CustomerMenu(scanner, inventory, reservations);
     }
-    public void start () {
+
+    public void start() {
         userSelection();
     }
-    public void userSelection(){
-        int num;
-        do {
-            System.out.println("=====USER SELECTION=====");
-            System.out.println("1. User");
-            System.out.println("2. Admin");
-            System.out.println("0. Quit");
-            num = input.getIntInput("Enter corresponding number: ");
 
-            switch(num){
-                case 1 -> customerMenu.start();
-                case 2 -> adminMenu.start();
-                case 0 -> System.out.println("Exiting System");
-                default -> System.out.println("Invalid number, please enter within range 1-2");
+    // ================= LOGIN =================
+    public void login() {
+        printHeader("ADMIN LOGIN");
+
+        System.out.print(" Username : ");
+        String username = scanner.nextLine();
+
+        System.out.print(" Password : ");
+        String password = scanner.nextLine();
+
+        if (username.equals("admin") && password.equals("password")) {
+            System.out.println("Login successful");
+            pause();
+            adminMenu.start();
+        } else {
+            System.out.println("Invalid credentials");
+            pause();
+        }
+    }
+
+    // ================= MAIN MENU =================
+    public void userSelection() {
+        int num;
+
+        do {
+            printHeader("MAIN MENU");
+
+            System.out.println(" 1. Customer");
+            System.out.println(" 2. Admin");
+            System.out.println(" 0. Exit");
+            System.out.println("__________________________________");
+
+            num = input.getIntInput(" Select option: ");
+
+            switch (num) {
+                case 1 -> {
+                    System.out.println("Entering Customer Menu...");
+                    pause();
+                    customerMenu.start();
+                }
+                case 2 -> login();
+                case 0 -> System.out.println("Exiting system...");
+                default -> System.out.println("Invalid option. Please choose 0-2.");
             }
-        }while (num!=0);
+
+        } while (num != 0);
+    }
+
+    // ================= UI HELPERS =================
+    private void printHeader(String title) {
+        System.out.println("\n================================");
+        System.out.printf("        %s%n", title);
+        System.out.println("================================");
+    }
+
+    private void pause() {
+        System.out.print("\nPress ENTER to continue...");
+        scanner.nextLine();
     }
 }
