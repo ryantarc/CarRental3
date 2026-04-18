@@ -54,7 +54,6 @@ public class AdminMenu {
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }
-
         } while (choice != 0);
     }
 

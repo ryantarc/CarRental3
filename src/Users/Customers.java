@@ -1,18 +1,26 @@
 package Users;
 
+import Reservations.Reservation;
+import java.util.ArrayList;
+
 public class Customers extends User{
+    private String email;
     private int drivingLicense;
-    private int contactInfo;
+    private ArrayList<Reservation> rentalHistory;
     public static int count = 1;
 
-    public Customers (String name, int drivingLicense, int contactInfo){
-        super(name);
+    public Customers (String name, String email, String password,String phoneNo, int drivingLicense){
+        super(name,email,password,phoneNo);
         this.drivingLicense = drivingLicense;
-        this.contactInfo = contactInfo;
+        this.rentalHistory = new ArrayList<>();
         id = "C" + String.format("%03d", count++);
     }
 
+    public static void setCount(int count) {
+        Customers.count = count;
+    }
+
     public String toString(){
-        return String.format("bleh");
+        return String.format(super.toString() + drivingLicense);
     }
 }
