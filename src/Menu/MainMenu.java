@@ -2,7 +2,6 @@ package Menu;
 import Managers.InventoryManager;
 import Managers.ReportsManager;
 import Managers.ReservationsManager;
-
 import java.util.Scanner;
 public class MainMenu {
     private AdminMenu adminMenu;
@@ -23,6 +22,21 @@ public class MainMenu {
     public void start () {
         userSelection();
     }
+
+    public void login(){
+        System.out.println("=====LOGIN=====");
+        System.out.println("Enter admin username: ");
+        String username = scanner.nextLine();   
+        System.out.println("Enter admin password: ");
+        String password = scanner.nextLine();
+        if (password.equals("password") && username.equals("admin")) {
+            System.out.println("Login successful");
+            adminMenu.start();
+        } else {
+            System.out.println("Invalid credentials, returning to main menu");
+        }
+    }
+    
     public void userSelection(){
         int num;
         do {
@@ -34,7 +48,7 @@ public class MainMenu {
 
             switch(num){
                 case 1 -> customerMenu.start();
-                case 2 -> adminMenu.start();
+                case 2 -> login();
                 case 0 -> System.out.println("Exiting System");
                 default -> System.out.println("Invalid number, please enter within range 1-2");
             }
