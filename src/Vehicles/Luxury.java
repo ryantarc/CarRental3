@@ -5,8 +5,8 @@ public class Luxury extends Car {
     private static int count = 1;
     private final String CARTYPE = "LUXURY";
 
-    public Luxury (String model, String carPlate, double dailyRate, carStatus status, int seatingCapacity,
-                    boolean hasSunroof){
+    public Luxury (String model, String carPlate, double dailyRate, CarStatus status, int seatingCapacity,
+                   boolean hasSunroof){
         super(model, carPlate, dailyRate, status, seatingCapacity);
         carType = CARTYPE;
         carID = "L" + String.format("%02d", count++);

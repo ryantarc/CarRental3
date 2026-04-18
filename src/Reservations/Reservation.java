@@ -3,8 +3,14 @@ package Reservations;
 import java.io.Serializable;
 
 public class Reservation implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
+
+    public enum ReservationStatus{
+        ACTIVE,
+        PENDING_RETURN,
+        COMPLETED,
+        CANCELLED
+    }
+
     private String carID;
     private String carType;
     private String carModel;
@@ -13,9 +19,10 @@ public class Reservation implements Serializable {
     private int rentalDays;
     private double totalCost;
     private String reservationDate;
-    private boolean returned;
+    private ReservationStatus status;
     private int realRentalDays;
     private double penalty;
+    private double finalinvoice;
 
     
     // Constructor
@@ -29,7 +36,7 @@ public class Reservation implements Serializable {
         this.rentalDays = rentalDays;
         this.totalCost = dailyRate * rentalDays;
         this.reservationDate = java.time.LocalDate.now().toString();
-        this.returned = false;
+        this.status = ReservationStatus.ACTIVE;
         this.penalty = 0;
         this.realRentalDays = rentalDays;
     }
@@ -43,16 +50,15 @@ public class Reservation implements Serializable {
     public int getRentalDays() { return rentalDays; }
     public double getTotalCost() { return totalCost; }
     public String getReservationDate() { return reservationDate; }
-    public boolean isReturned() { return returned; }
+    public ReservationStatus getStatus() { return status; }
 
-    public void setReturned(boolean returned) { this.returned = returned; }
+    public void setStatus(ReservationStatus status) { this.status = status; }
     public void setPenalty(double penalty) { this.penalty = penalty; }
     public void setRealDays(int realRentalDays) { this.realRentalDays = realRentalDays; }
 
-    
     @Override
     public String toString() {
-        return "Car ID: " + carID + " | Car: " + carModel + " | Days: " + rentalDays +
-               " | Total: RM" + totalCost + " | Date: " + reservationDate;
+        return String.format("%-8s | %-15s | %-4d | RM%-8.2f | %-8s | %-12s",
+                carID, carModel, rentalDays, totalCost, status, reservationDate);
     }
 }
