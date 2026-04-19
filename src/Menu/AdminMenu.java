@@ -4,33 +4,41 @@ import Managers.*;
 import Reservations.Reservation;
 import Vehicles.*;
 import java.util.Scanner;
+import Users.Admin;
+import Users.Customers;
+import Users.User;
 
 public class AdminMenu {
     private InventoryManager inventory;
     private ReportsManager reportsManager;
     private Scanner scanner;
+    private UserManager userManager;
     private InputValidators input;
     private ReservationsManager reservationsManager;
+    private AuthManager authManager;
 
     public AdminMenu(Scanner scanner, InventoryManager inventory,
                      ReportsManager reportsManager,
-                     ReservationsManager reservationsManager) {
+                     ReservationsManager reservationsManager, UserManager userManager, AuthManager authManager) {
 
         this.inventory = inventory;
         this.scanner = scanner;
         this.reportsManager = reportsManager;
         this.reservationsManager = reservationsManager;
+        this.userManager = userManager;
+        this.authManager = new AuthManager();
         input = new InputValidators();
 
         inventory.loadFromFile();
     }
 
-    public void start() {
+    public void start(String adminName) {
         int choice;
 
         do {
             printHeader("ADMIN MENU");
-
+            System.out.println(" Logged in as: " + adminName);
+            System.out.println("________________________________");
             System.out.println(" 1. Add Car");
             System.out.println(" 2. View Inventory");
             System.out.println(" 3. Delete Car");
@@ -38,6 +46,7 @@ public class AdminMenu {
             System.out.println(" 5. View Report");
             System.out.println(" 6. View Reservations");
             System.out.println(" 7. Review Pending Returns");
+            System.out.println(" 8. Manage Users");
             System.out.println(" 0. Back");
             System.out.println("________________________________");
 
@@ -51,6 +60,7 @@ public class AdminMenu {
                 case 5 -> viewReport();
                 case 6 -> viewReservation();
                 case 7 -> reviewPendingReservations();
+                case 8 -> manageUsers();
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }
@@ -189,16 +199,20 @@ public class AdminMenu {
 
         int days = input.getIntInput(" Rented days: ");
         boolean damaged = input.getBooleanInput(" Damaged (y/n): ");
+        String remarks = "";
+        if (damaged) {
+            System.out.print(" Remarks      : ");
+            remarks = scanner.nextLine().trim();  //
+        }
         boolean lowFuel = input.getBooleanInput(" Low fuel (y/n): ");
 
-        reservationsManager.returnCar(carID, days, damaged, lowFuel);
+        reservationsManager.returnCar(carID, days, damaged, lowFuel, remarks);
         reservationsManager.changeReservationStatus(
                 Reservation.ReservationStatus.COMPLETED, reservation);
 
         inventory.changeCarStatus(Car.CarStatus.AVAILABLE, car);
         reservationsManager.saveToFile();
 
-        System.out.println("\nReturn processed.");
         pause();
     }
 
@@ -285,6 +299,240 @@ public class AdminMenu {
         printHeader("REPORT");
         reportsManager.generateReport(reservationsManager.getAllReservations());
         pause();
+    }
+
+    // ================= MANAGE USERS =================
+    private void manageUsers() {
+
+        int choice;
+
+        do {
+            printHeader("MANAGE USERS");
+            System.out.println(" 1. Add Admin");
+            System.out.println(" 2. Display Users");
+            System.out.println(" 3. Edit User Details");
+            System.out.println(" 4. Delete User");
+            System.out.println(" 0. Back");
+            System.out.println("________________________________");
+
+            choice = input.getIntInput(" Select option: ");
+
+            switch(choice){
+                case 1 -> addAdmin();
+                case 2 -> displayUsers();
+                case 3 -> editUser();
+                case 4 -> deleteUser();
+                default -> System.out.println(" Invalid option.");
+
+            }
+        }while (choice != 0);
+
+
+    }
+
+    // ================= ADD ADMIN =================
+    private void addAdmin(){
+        printHeader("ADD ADMIN");
+
+        System.out.print(" Full Name         : ");
+        String name = scanner.nextLine().trim();
+
+        System.out.print(" Email             : ");
+        String email = scanner.nextLine().trim();
+
+        System.out.print(" Password          : ");
+        String password = scanner.nextLine().trim();
+
+        String phoneNo;
+        while (true) {
+            System.out.print(" Phone Number (10 digits)   : ");
+            phoneNo = scanner.nextLine().trim();
+            if (phoneNo.matches("\\d{10}")) break;
+            System.out.println(" Invalid. Phone number must be exactly 10 digits.");
+        }
+
+        Admin newAdmin = new Admin(name, email, password, phoneNo);
+        userManager.addUser(newAdmin);
+
+        System.out.println("\n Admin added! ID: " + newAdmin.getId());
+        pause();
+    }
+
+    // ============== DISPLAY USER =================
+
+    private void displayUsers() {
+        printHeader("DISPLAY USERS");
+        System.out.println(" 1. All Users");
+        System.out.println(" 2. Admins Only");
+        System.out.println(" 3. Customers Only");
+        System.out.println(" 0. Back");
+
+        int choice = input.getIntInput(" Select option: ");
+
+        switch (choice) {
+            case 1 -> {
+                System.out.println("\n--- ADMINS ---");
+                userManager.displayAdmins();
+                System.out.println("\n--- CUSTOMERS ---");
+                authManager.displayCustomers();
+            }
+            case 2 -> userManager.displayAdmins();
+            case 3 -> authManager.displayCustomers();
+            case 0 -> { return; }
+            default -> System.out.println(" Invalid option.");
+        }
+
+        pause();
+    }
+
+    // =============== EDIT USER ===============
+
+    private void editUser() {
+        printHeader("EDIT USER DETAILS");
+
+        System.out.println(" 1. Edit Admin");
+        System.out.println(" 2. Edit Customer");
+        System.out.println(" 0. Back");
+
+        int choice = input.getIntInput(" Select option: ");
+        if (choice == 0) {
+            return;
+        }
+
+        switch (choice) {
+            case 1 -> {
+                userManager.displayAdmins();
+                System.out.print("\n Enter Admin ID to edit: ");
+                String id = scanner.nextLine().trim();
+
+                User user = userManager.findUser(id);
+                if (user == null) {
+                    System.out.println("User not found.");
+                    pause();
+                    return;
+                }
+                applyEdit(user);
+                userManager.editUser(user, user.getName(), user.getEmail(), user.getPassword(), user.getPhoneNo());
+
+            }
+            case 2 -> {
+                authManager.displayCustomers();
+                System.out.print("\n Enter Customer ID to edit: ");
+                String id = scanner.nextLine().trim();
+
+                Customers customer = authManager.findCustomerById(id);
+                if (customer == null) {
+                    System.out.println(" Customer not found.");
+                    pause();
+                    return;
+                }
+                applyEdit(customer);
+                authManager.saveToFile();
+
+
+            }
+            default -> System.out.println(" Invalid option.");
+        }
+
+
+
+
+    }
+
+    // ============== DELETE USER =====================
+    private void deleteUser(){
+        printHeader("DELETE USER");
+
+        System.out.println(" 1. Delete Admin");
+        System.out.println(" 2. Delete Customer");
+        System.out.println(" 0. Back");
+
+        int choice = input.getIntInput(" Select option: ");
+        if (choice == 0) {
+            return;
+        }
+
+        switch (choice) {
+            case 1 -> {
+                userManager.displayAdmins();
+                System.out.print("\n Enter Admin ID to delete (x to cancel): ");
+                String id = scanner.nextLine().trim();
+                if (id.equalsIgnoreCase("x")) return;
+
+                User user = userManager.findUser(id);
+                if (user == null) {
+                    System.out.println(" Admin not found.");
+                    pause();
+                    return;
+                }
+
+                System.out.print(" Are you sure you want to delete " + user.getName() + "? (y/n): ");
+                String confirm = scanner.nextLine().trim();
+                if (confirm.equalsIgnoreCase("y")) {
+                    userManager.deleteUser(user);
+                } else {
+                    System.out.println(" Cancelled.");
+                }
+            }
+            case 2 -> {
+                authManager.displayCustomers();
+                System.out.print("\n Enter Customer ID to delete (x to cancel): ");
+                String id = scanner.nextLine().trim();
+                if (id.equalsIgnoreCase("x")) return;
+
+                Customers customer = authManager.findCustomerById(id);
+                if (customer == null) {
+                    System.out.println(" Customer not found.");
+                    pause();
+                    return;
+                }
+
+                System.out.print(" Are you sure you want to delete " + customer.getName() + "? (y/n): ");
+                String confirm = scanner.nextLine().trim();
+                if (confirm.equalsIgnoreCase("y")) {
+                    authManager.deleteCustomer(customer);
+                } else {
+                    System.out.println(" Cancelled.");
+                }
+            }
+            default -> System.out.println(" Invalid option.");
+
+
+        }
+        pause();
+
+    }
+
+    private void applyEdit(User user) {
+        System.out.println("\n Leave blank to keep current value.");
+
+        System.out.print(" Old Name    : " + user.getName() + "\n New Name    : ");
+        String name = scanner.nextLine().trim();
+
+        System.out.print(" Old Email   : " + user.getEmail() + "\n New Email    :");
+        String email = scanner.nextLine().trim();
+
+        System.out.print(" Old Password : [hidden]\n New Password :");
+        String password = scanner.nextLine().trim();
+
+        System.out.print(" New PhoneNo  : " + user.getPhoneNo() + "\n New PhoneNo  :");
+        String phone = scanner.nextLine().trim();
+
+        if (!name.isEmpty()){
+            user.setName(name);
+        }
+        if (!email.isEmpty()) {
+            user.setEmail(email);
+        }
+        if (!password.isEmpty()){
+            user.setPassword(password);
+        }
+        if (!phone.isEmpty()){
+            user.setPhoneNo(phone);
+        }
+
+
+        System.out.println(" Details updated.");
     }
 
     // ================= UI =================
