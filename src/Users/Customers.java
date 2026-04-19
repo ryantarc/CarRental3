@@ -4,11 +4,11 @@ import Reservations.Reservation;
 import java.util.ArrayList;
 
 public class Customers extends User {
-    private int drivingLicense;
+    private String drivingLicense;
     private ArrayList<Reservation> rentalHistory;
     public static int count = 1;
 
-    public Customers(String name, String email, String password, String phoneNo, int drivingLicense) {
+    public Customers(String name, String email, String password, String phoneNo, String drivingLicense) {
         super(name, email, password, phoneNo);
         this.drivingLicense = drivingLicense;
         this.rentalHistory = new ArrayList<>();
@@ -19,13 +19,13 @@ public class Customers extends User {
         Customers.count = count;
     }
 
-    public int getDrivingLicense() {
+    public String getDrivingLicense() {
         return drivingLicense;
     }
 
     // Used for saving to file: ID|name|email|password|phone|license
     public String toFileString() {
-        return String.format("%s|%s|%s|%s|%s|%d",
+        return String.format("%s|%s|%s|%s|%s|%s",
                 getId(),
                 getName(),
                 getEmail(),

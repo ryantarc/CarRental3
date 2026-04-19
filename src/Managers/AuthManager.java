@@ -16,7 +16,7 @@ public class AuthManager {
     }
 
     // ================= SIGN UP =================
-    public Customers signUp(String name, String email, String password, String phoneNo, int drivingLicense) {
+    public Customers signUp(String name, String email, String password, String phoneNo, String drivingLicense) {
         if (findByEmail(email) != null) {
             return null; // email already in use
         }
@@ -36,7 +36,7 @@ public class AuthManager {
                 return c;
             }
         }
-        return null; // invalid credentials
+        return null;
     }
 
     // ================= LOGOUT =================
@@ -85,18 +85,17 @@ public class AuthManager {
                 String[] parts = line.split("\\|");
                 if (parts.length < 6) continue;
 
-                String id       = parts[0].trim();
-                String name     = parts[1].trim();
-                String email    = parts[2].trim();
-                String password = parts[3].trim();
-                String phoneNo  = parts[4].trim();
-                int license     = Integer.parseInt(parts[5].trim());
+                String id          = parts[0].trim();
+                String name        = parts[1].trim();
+                String email       = parts[2].trim();
+                String password    = parts[3].trim();
+                String phoneNo     = parts[4].trim();
+                String license     = parts[5].trim(); // String, not int
 
-                // Temporarily suppress auto-increment by controlling count
                 int num = Integer.parseInt(id.substring(1));
                 if (num > maxCount) maxCount = num;
 
-                Customers.count = num; // set so next ID continues correctly
+                Customers.count = num;
                 Customers c = new Customers(name, email, password, phoneNo, license);
                 c.setId(id);
                 customers.add(c);

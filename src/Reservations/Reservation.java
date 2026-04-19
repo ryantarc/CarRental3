@@ -4,13 +4,14 @@ import java.io.Serializable;
 
 public class Reservation implements Serializable {
 
-    public enum ReservationStatus{
+    public enum ReservationStatus {
         ACTIVE,
         PENDING_RETURN,
         COMPLETED,
         CANCELLED
     }
 
+    private String customerID;   // <-- NEW: links reservation to a customer
     private String carID;
     private String carType;
     private String carModel;
@@ -22,12 +23,11 @@ public class Reservation implements Serializable {
     private ReservationStatus status;
     private int realRentalDays;
     private double penalty;
-    private double finalinvoice;
 
-    
-    // Constructor
-    public Reservation(String carID, String carType, String carModel, 
-                      String carPlate, double dailyRate, int rentalDays) {
+    // Updated constructor — customerID is now the first param
+    public Reservation(String customerID, String carID, String carType, String carModel,
+                       String carPlate, double dailyRate, int rentalDays) {
+        this.customerID = customerID;
         this.carID = carID;
         this.carType = carType;
         this.carModel = carModel;
@@ -40,25 +40,29 @@ public class Reservation implements Serializable {
         this.penalty = 0;
         this.realRentalDays = rentalDays;
     }
-    
+
     // Getters
-    public String getCarID() { return carID; }
-    public String getCarType() { return carType; }
-    public String getCarModel() { return carModel; }
-    public String getCarPlate() { return carPlate; }
-    public double getDailyRate() { return dailyRate; }
-    public int getRentalDays() { return rentalDays; }
-    public double getTotalCost() { return totalCost; }
+    public String getCustomerID()      { return customerID; }
+    public String getCarID()           { return carID; }
+    public String getCarType()         { return carType; }
+    public String getCarModel()        { return carModel; }
+    public String getCarPlate()        { return carPlate; }
+    public double getDailyRate()       { return dailyRate; }
+    public int getRentalDays()         { return rentalDays; }
+    public double getTotalCost()       { return totalCost; }
     public String getReservationDate() { return reservationDate; }
     public ReservationStatus getStatus() { return status; }
+    public double getPenalty()         { return penalty; }
+    public int getRealRentalDays()     { return realRentalDays; }
 
-    public void setStatus(ReservationStatus status) { this.status = status; }
-    public void setPenalty(double penalty) { this.penalty = penalty; }
-    public void setRealDays(int realRentalDays) { this.realRentalDays = realRentalDays; }
+    // Setters
+    public void setStatus(ReservationStatus status)   { this.status = status; }
+    public void setPenalty(double penalty)             { this.penalty = penalty; }
+    public void setRealDays(int realRentalDays)        { this.realRentalDays = realRentalDays; }
 
     @Override
     public String toString() {
-        return String.format("%-8s | %-15s | %-4d | RM%-8.2f | %-8s | %-12s",
+        return String.format("%-8s | %-15s | %-4d | RM%-8.2f | %-14s | %-12s",
                 carID, carModel, rentalDays, totalCost, status, reservationDate);
     }
 }
