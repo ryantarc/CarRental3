@@ -77,6 +77,8 @@ public class AuthManager {
         File file = new File(FILE_PATH);
         if (!file.exists()) return;
 
+        customers.clear();
+
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             int maxCount = 0;

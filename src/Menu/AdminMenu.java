@@ -387,10 +387,14 @@ public class AdminMenu {
                 System.out.println("\n--- ADMINS ---");
                 userManager.displayAdmins();
                 System.out.println("\n--- CUSTOMERS ---");
+                authManager.loadFromFile();
                 authManager.displayCustomers();
             }
             case 2 -> userManager.displayAdmins();
-            case 3 -> authManager.displayCustomers();
+            case 3 -> {
+                    authManager.loadFromFile();
+                    authManager.displayCustomers();
+            }
             case 0 -> { return; }
             default -> System.out.println(" Invalid option.");
         }
