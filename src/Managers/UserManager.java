@@ -16,6 +16,7 @@ public class UserManager {
     public UserManager(){
         users = new ArrayList<>();
         fm = new FileManager();
+        loadFromFile();
     }
 
     public void saveToFile(){
@@ -23,6 +24,8 @@ public class UserManager {
     }
     public void loadFromFile(){
         users = fm.loadFromFile(filename);
+        if (users == null) users = new ArrayList<>();
+        updateUserIDCounts();
 
     }
 
@@ -60,14 +63,14 @@ public class UserManager {
         }
     }
 
-    public void displayAdmin() {
+    public void displayAdmins() {
         System.out.printf(
                 "%-5s | %-15s | %-20s | %-15s \n",
                 "ID", "Name", "Email", "Phone"
         );
         System.out.println("--------------------------------------------------------------------------");
         for (User user : users) {
-            if (user instanceof Customers) {
+            if (user instanceof Admin) {
                 System.out.println(user);
             }
         }
@@ -78,6 +81,7 @@ public class UserManager {
 
         for (User user : users) {
             String id = user.getId();
+            if (id == null) continue;
             int num = Integer.parseInt(id.substring(1));
 
             switch (id.charAt(0)) {
@@ -90,7 +94,7 @@ public class UserManager {
         Admin.setCount(maxA + 1);
     }
 
-    public User finduser(String id){
+    public User findUser(String id){
         for (User user: users){
             if (user.getId().equals(id)) {
                 return user;
@@ -98,5 +102,33 @@ public class UserManager {
         }
         return null;//not found
     }
+
+    public Admin findAdminByCredentials(String email, String password) {
+        for (User user : users) {
+            if (user instanceof Admin
+                    && user.getEmail().equalsIgnoreCase(email)
+                    && user.getPassword().equals(password)) {
+                return (Admin) user;
+            }
+        }
+        return null;
+    }
+
+    public void editUser(User user, String name, String email, String password, String phoneNo) {
+        if (!name.isEmpty())     user.setName(name);
+        if (!email.isEmpty())    user.setEmail(email);
+        if (!password.isEmpty()) user.setPassword(password);
+        if (!phoneNo.isEmpty())  user.setPhoneNo(phoneNo);
+        saveToFile();
+        System.out.println(" User details updated.");
+    }
+
+    public boolean isEmpty() {
+        return users.isEmpty();
+    }
+
+
+
+
 
 }

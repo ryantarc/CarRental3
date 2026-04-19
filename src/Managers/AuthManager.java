@@ -107,4 +107,32 @@ public class AuthManager {
             System.out.println("Error loading customers: " + e.getMessage());
         }
     }
+
+    public List<Customers> getAllCustomers() {
+        return customers;
+    }
+
+    // Find customer by ID
+    public Customers findCustomerById(String id) {
+        for (Customers c : customers) {
+            if (c.getId().equals(id)) return c;
+        }
+        return null;
+    }
+
+    // Display all customers
+    public void displayCustomers() {
+        System.out.printf(" %-5s | %-15s | %-20s | %-15s | %-12s%n",
+                "ID", "Name", "Email", "Phone", "License");
+        System.out.println(" " + "-".repeat(74));
+        for (Customers c : customers) {
+            System.out.println(c);
+        }
+    }
+
+    public void deleteCustomer(Customers customer) {
+        customers.remove(customer);
+        saveToFile();
+        System.out.println(" Customer " + customer.getName() + " has been deleted.");
+    }
 }

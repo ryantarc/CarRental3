@@ -1,9 +1,11 @@
 package Users;
 
 import Reservations.Reservation;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Customers extends User {
+public class Customers extends User implements Serializable {
     private String drivingLicense;
     private ArrayList<Reservation> rentalHistory;
     public static int count = 1;

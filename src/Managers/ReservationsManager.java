@@ -96,27 +96,59 @@ public class ReservationsManager {
     }
 
     // ================= ACTIONS =================
-    public void returnCar(String carID, int realRentalDays, boolean damaged, boolean lowFuel) {
+    public void returnCar(String carID, int realRentalDays, boolean damaged, boolean lowFuel, String remarks) {
         for (Reservation r : reservations) {
-            if (r.getCarID().equals(carID) && r.getStatus() == Reservation.ReservationStatus.ACTIVE) {
+            if (r.getCarID().equals(carID) && r.getStatus() == Reservation.ReservationStatus.PENDING_RETURN) {
                 double penalty = 0;
+                double latePenalty = 0;
+                double damageFee = 0;
+                double lowFuelFee = 0;
+
                 if (realRentalDays > r.getRentalDays()) {
                     int lateDays = realRentalDays - r.getRentalDays();
-                    penalty += lateDays * r.getDailyRate() * 2.00;
+                    latePenalty = lateDays * r.getDailyRate() * 2.00;
                 }
-                if (damaged) penalty += 100;
-                if (lowFuel)  penalty += 50;
+                if (damaged) damageFee = 100;
+                if (lowFuel) lowFuelFee = 50;
 
-                r.setStatus(Reservation.ReservationStatus.PENDING_RETURN);
+                penalty = latePenalty + damageFee + lowFuelFee;
+
                 r.setPenalty(penalty);
                 r.setRealDays(realRentalDays);
+                r.setRemarks(remarks);
+                saveToFile();
 
-                System.out.println(" Return processed.");
-                System.out.println(" Penalty    : RM" + penalty);
-                System.out.println(" Total Cost : RM" + (r.getTotalCost() + penalty));
+                displayInvoice(r, latePenalty, damageFee, lowFuelFee);
                 return;
             }
         }
+        System.out.println(" Reservation not found.");
+    }
+
+    private void displayInvoice(Reservation r, double latePenalty, double damageFee, double lowFuelFee) {
+        double baseCost = r.getDailyRate() * r.getRealRentalDays();
+        double total = baseCost + latePenalty + damageFee + lowFuelFee;
+
+        System.out.println("\n================================");
+        System.out.println("           INVOICE              ");
+        System.out.println("================================");
+        System.out.printf(" %-15s : %s%n",  "Car ID",       r.getCarID());
+        System.out.printf(" %-15s : %s%n",  "Car Model",    r.getCarModel());
+        System.out.printf(" %-15s : %s%n",  "Customer ID",  r.getCustomerID());
+        System.out.printf(" %-15s : %d%n",  "Rental Days",  r.getRealRentalDays());
+        System.out.printf(" %-15s : RM%.2f%n", "Daily Rate",   r.getDailyRate());
+        System.out.println(" --------------------------------");
+        System.out.printf(" %-15s : RM%.2f%n", "Base Cost",    baseCost);
+        System.out.printf(" %-15s : RM%.2f%n", "Late Penalty", latePenalty);
+        System.out.printf(" %-15s : RM%.2f%n", "Damage Fee",   damageFee);
+        System.out.printf(" %-15s : RM%.2f%n", "Low Fuel Fee", lowFuelFee);
+        System.out.println(" --------------------------------");
+        System.out.printf(" %-15s : %s%n",  "Remarks",
+                (r.getRemarks() == null || r.getRemarks().isEmpty()) ? "None" : r.getRemarks());
+        System.out.println(" --------------------------------");
+        System.out.printf(" %-15s : RM%.2f%n", "TOTAL", total);
+        System.out.println("================================");
+
     }
 
     public void cancelCar(String carID) {

@@ -23,6 +23,7 @@ public class Reservation implements Serializable {
     private ReservationStatus status;
     private int realRentalDays;
     private double penalty;
+    private String remarks;
 
     // Updated constructor — customerID is now the first param
     public Reservation(String customerID, String carID, String carType, String carModel,
@@ -54,11 +55,13 @@ public class Reservation implements Serializable {
     public ReservationStatus getStatus() { return status; }
     public double getPenalty()         { return penalty; }
     public int getRealRentalDays()     { return realRentalDays; }
+    public String getRemarks()         { return remarks; }
 
     // Setters
     public void setStatus(ReservationStatus status)   { this.status = status; }
     public void setPenalty(double penalty)             { this.penalty = penalty; }
     public void setRealDays(int realRentalDays)        { this.realRentalDays = realRentalDays; }
+    public void setRemarks(String remarks)              { this.remarks = remarks; }
 
     @Override
     public String toString() {

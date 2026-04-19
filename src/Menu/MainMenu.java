@@ -3,6 +3,10 @@ package Menu;
 import Managers.InventoryManager;
 import Managers.ReportsManager;
 import Managers.ReservationsManager;
+import Users.Admin;
+import Managers.UserManager;
+import Managers.AuthManager;
+
 import java.util.Scanner;
 
 public class MainMenu {
@@ -12,13 +16,19 @@ public class MainMenu {
     private InventoryManager inventory;
     private InputValidators input;
     private ReservationsManager reservations;
+    private UserManager userManager;
 
-    public MainMenu(Scanner scanner, InventoryManager inventory, ReportsManager reportsManager) {
+    private static final String SUPER_ADMIN_EMAIL = "admin";
+    private static final String SUPER_ADMIN_PASSWORD = "password";
+
+    public MainMenu(Scanner scanner, InventoryManager inventory, ReportsManager reportsManager, UserManager userManager) {
         this.scanner = scanner;
         this.inventory = inventory;
+        this.userManager = userManager;
         input = new InputValidators();
         reservations = new ReservationsManager(inventory);
-        adminMenu = new AdminMenu(scanner, inventory, reportsManager, reservations);
+        AuthManager authManager = new AuthManager();
+        adminMenu = new AdminMenu(scanner, inventory, reportsManager, reservations, userManager, authManager);
         customerMenu = new CustomerMenu(scanner, inventory, reservations);
     }
 
@@ -30,20 +40,29 @@ public class MainMenu {
     public void login() {
         printHeader("ADMIN LOGIN");
 
-        System.out.print(" Username : ");
-        String username = scanner.nextLine();
+        System.out.print(" Email    : ");
+        String email = scanner.nextLine().trim();
 
         System.out.print(" Password : ");
         String password = scanner.nextLine();
 
-        if (username.equals("admin") && password.equals("password")) {
-            System.out.println("Login successful");
+        if (email.equals(SUPER_ADMIN_EMAIL) && password.equals(SUPER_ADMIN_PASSWORD)) {
+            System.out.println("\n Welcome, Super Admin!");
             pause();
-            adminMenu.start();
-        } else {
-            System.out.println("Invalid credentials");
-            pause();
+            adminMenu.start("Super Admin");
+            return;
         }
+
+        Admin admin = userManager.findAdminByCredentials(email, password);
+        if (admin != null) {
+            System.out.println("\n Welcome, " + admin.getName() + "! (" + admin.getId() + ")");
+            pause();
+            adminMenu.start(admin.getName());
+            return;
+        }
+
+        System.out.println("\n Invalid credentials.");
+        pause();
     }
 
     // ================= MAIN MENU =================
