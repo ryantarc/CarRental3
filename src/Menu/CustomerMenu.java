@@ -30,21 +30,17 @@ public class CustomerMenu {
         int choice;
 
         do {
-            printHeader("CUSTOMER PORTAL");
+            printHeader("CUSTOMER PAGE");
             System.out.println(" 1. Login");
             System.out.println(" 2. Sign Up");
-            System.out.println(" 0. Back");
+            System.out.println(" 0. Exit");
             System.out.println("________________________________");
 
             choice = input.getIntInput(" Select option: ");
 
             switch (choice) {
-                case 1 -> {
-                    if (loginFlow()) customerDashboard();
-                }
-                case 2 -> {
-                    if (signUpFlow()) customerDashboard();
-                }
+                case 1 -> { if (loginFlow())  customerDashboard(); }
+                case 2 -> { if (signUpFlow()) customerDashboard(); }
                 case 0 -> System.out.println("Returning to main menu...");
                 default -> System.out.println("Invalid option. Please choose 0-2.");
             }
@@ -55,7 +51,7 @@ public class CustomerMenu {
     // ================= AUTH FLOWS =================
     private boolean loginFlow() {
         printHeader("LOGIN");
-        scanner.nextLine(); // clear buffer
+        scanner.nextLine();
 
         System.out.print(" Email    : ");
         String email = scanner.nextLine().trim();
@@ -78,21 +74,32 @@ public class CustomerMenu {
 
     private boolean signUpFlow() {
         printHeader("SIGN UP");
-        scanner.nextLine(); // clear buffer
+        scanner.nextLine();
 
-        System.out.print(" Full Name        : ");
+        System.out.print(" Full Name         : ");
         String name = scanner.nextLine().trim();
 
-        System.out.print(" Email            : ");
+        System.out.print(" Email             : ");
         String email = scanner.nextLine().trim();
 
-        System.out.print(" Password         : ");
+        System.out.print(" Password          : ");
         String password = scanner.nextLine().trim();
 
-        System.out.print(" Phone Number     : ");
-        String phoneNo = scanner.nextLine().trim();
+        String phoneNo;
+        while (true) {
+            System.out.print(" Phone Number (10 digits)   : ");
+            phoneNo = scanner.nextLine().trim();
+            if (phoneNo.matches("\\d{10}")) break;
+            System.out.println(" Invalid. Phone number must be exactly 10 digits.");
+        }
 
-        int license = input.getIntInput(" Driving License No: ");
+        String license;
+        while (true) {
+            System.out.print(" Driving License (8 digits) : ");
+            license = scanner.nextLine().trim();
+            if (license.matches("\\d{8}")) break;
+            System.out.println(" Invalid. Driving license must be exactly 8 digits.");
+        }
 
         Customers newCustomer = authManager.signUp(name, email, password, phoneNo, license);
 
@@ -121,6 +128,8 @@ public class CustomerMenu {
             System.out.println(" 2. View Inventory");
             System.out.println(" 3. Return Car");
             System.out.println(" 4. Cancel Reservation");
+            System.out.println(" 5. Currently Reserving");
+            System.out.println(" 6. View Info");
             System.out.println(" 0. Logout");
             System.out.println("________________________________");
 
@@ -131,11 +140,13 @@ public class CustomerMenu {
                 case 2 -> viewInventory();
                 case 3 -> returnCar();
                 case 4 -> cancelCar();
+                case 5 -> viewCurrentReservations();
+                case 6 -> viewInfo();
                 case 0 -> {
                     authManager.logout();
                     System.out.println(" Logged out. See you next time!");
                 }
-                default -> System.out.println("Invalid option. Please choose 0-4.");
+                default -> System.out.println("Invalid option. Please choose 0-6.");
             }
 
         } while (choice != 0);
@@ -157,7 +168,7 @@ public class CustomerMenu {
             case 2 -> inventory.displayInventory("LUXURY");
             case 3 -> inventory.displayInventory("SUV");
             default -> {
-                System.out.println("Invalid choice");
+                System.out.println(" Invalid choice.");
                 return;
             }
         }
@@ -165,17 +176,17 @@ public class CustomerMenu {
         scanner.nextLine();
 
         System.out.print("\n Enter Car ID: ");
-        String carID = scanner.nextLine();
+        String carID = scanner.nextLine().trim();
 
         Car selectedCar = inventory.findCar(carID);
 
         if (selectedCar == null) {
-            System.out.println("Car not found");
+            System.out.println(" Car not found.");
             return;
         }
 
         if (selectedCar.getStatus() != Car.CarStatus.AVAILABLE) {
-            System.out.println("Car is not available");
+            System.out.println(" Car is not available.");
             return;
         }
 
@@ -183,7 +194,6 @@ public class CustomerMenu {
         double totalCost = rentDays * selectedCar.getDailyRate();
 
         printHeader("RESERVATION SUMMARY");
-
         System.out.println(" Car ID      : " + selectedCar.getCarID());
         System.out.println(" Type        : " + selectedCar.getCarType());
         System.out.println(" Model       : " + selectedCar.getModel());
@@ -197,6 +207,7 @@ public class CustomerMenu {
 
         if (confirm.equalsIgnoreCase("y")) {
             Reservation newReservation = new Reservation(
+                    authManager.getLoggedInCustomer().getId(),
                     selectedCar.getCarID(),
                     selectedCar.getCarType(),
                     selectedCar.getModel(),
@@ -207,16 +218,15 @@ public class CustomerMenu {
 
             reservationsManager.addReservation(newReservation);
             inventory.changeCarStatus(Car.CarStatus.RENTED, selectedCar);
-
-            System.out.println("Reservation confirmed!");
+            System.out.println(" Reservation confirmed!");
         } else {
-            System.out.println("Reservation cancelled.");
+            System.out.println(" Reservation cancelled.");
         }
 
         pause();
     }
 
-    // ================= VIEW =================
+    // ================= VIEW INVENTORY =================
     private void viewInventory() {
         printHeader("INVENTORY");
         inventory.displayInventory();
@@ -227,29 +237,32 @@ public class CustomerMenu {
     private void returnCar() {
         printHeader("RETURN CAR");
 
-        if (!reservationsManager.hasReservations(Reservation.ReservationStatus.ACTIVE)) {
-            System.out.println("No active reservations found.");
+        String customerID = authManager.getLoggedInCustomer().getId();
+
+        if (!reservationsManager.hasReservationsByCustomer(customerID, Reservation.ReservationStatus.ACTIVE)) {
+            System.out.println(" No active reservations found.");
+            pause();
             return;
         }
 
-        reservationsManager.displayReservations(Reservation.ReservationStatus.ACTIVE);
+        reservationsManager.displayReservationsByCustomer(customerID, Reservation.ReservationStatus.ACTIVE);
 
         System.out.print("\n Enter Car ID to return: ");
-        String carID = scanner.nextLine();
+        String carID = scanner.nextLine().trim();
 
         Car car = inventory.findCar(carID);
         Reservation reservation = reservationsManager.findActiveReservation(carID);
 
         if (car == null || reservation == null) {
-            System.out.println("Invalid Car ID");
+            System.out.println(" Invalid Car ID.");
+            pause();
             return;
         }
 
-        reservationsManager.changeReservationStatus(
-                Reservation.ReservationStatus.PENDING_RETURN, reservation);
+        reservationsManager.changeReservationStatus(Reservation.ReservationStatus.PENDING_RETURN, reservation);
         reservationsManager.saveToFile();
 
-        System.out.println("Car marked for return.");
+        System.out.println(" Car marked for return. Pending staff approval.");
         pause();
     }
 
@@ -257,20 +270,25 @@ public class CustomerMenu {
     private void cancelCar() {
         printHeader("CANCEL RESERVATION");
 
-        if (!reservationsManager.hasReservations(Reservation.ReservationStatus.ACTIVE)) {
-            System.out.println("No active reservations found.");
+        String customerID = authManager.getLoggedInCustomer().getId();
+
+        if (!reservationsManager.hasReservationsByCustomer(customerID, Reservation.ReservationStatus.ACTIVE)) {
+            System.out.println(" No active reservations found.");
+            pause();
             return;
         }
 
-        reservationsManager.displayReservations(Reservation.ReservationStatus.ACTIVE);
+        reservationsManager.displayReservationsByCustomer(customerID, Reservation.ReservationStatus.ACTIVE);
 
         System.out.print("\n Enter Car ID to cancel: ");
-        String carID = scanner.nextLine();
+        String carID = scanner.nextLine().trim();
 
         Car car = inventory.findCar(carID);
+        Reservation reservation = reservationsManager.findActiveReservation(carID);
 
-        if (car == null) {
-            System.out.println("Invalid Car ID");
+        if (car == null || reservation == null) {
+            System.out.println(" Invalid Car ID.");
+            pause();
             return;
         }
 
@@ -278,7 +296,62 @@ public class CustomerMenu {
         inventory.changeCarStatus(Car.CarStatus.AVAILABLE, car);
         reservationsManager.saveToFile();
 
-        System.out.println("Reservation cancelled.");
+        System.out.println(" Reservation cancelled.");
+        pause();
+    }
+
+    // ================= CURRENTLY RESERVING =================
+    private void viewCurrentReservations() {
+        printHeader("CURRENTLY RESERVING");
+
+        String customerID = authManager.getLoggedInCustomer().getId();
+
+        if (!reservationsManager.hasReservationsByCustomer(customerID, Reservation.ReservationStatus.ACTIVE)) {
+            System.out.println(" You have no active reservations.");
+            pause();
+            return;
+        }
+
+        reservationsManager.displayReservationsByCustomer(customerID, Reservation.ReservationStatus.ACTIVE);
+        pause();
+    }
+
+    // ================= VIEW INFO =================
+    private void viewInfo() {
+        printHeader("MY INFO");
+
+        Customers me = authManager.getLoggedInCustomer();
+
+        System.out.println(" Customer ID      : " + me.getId());
+        System.out.println(" Name             : " + me.getName());
+        System.out.println(" Email            : " + me.getEmail());
+        System.out.println(" Phone            : " + me.getPhoneNo());
+        System.out.println(" Driving License  : " + me.getDrivingLicense());
+
+        System.out.println("\n--- Rental History ---");
+
+        String customerID = me.getId();
+        boolean found = false;
+
+        System.out.printf(" %-8s | %-18s | %-8s | %-6s | %-10s | %-14s%n",
+                "Car ID", "Car Model", "Type", "Days", "Total (RM)", "Status");
+        System.out.println(" " + "-".repeat(78));
+
+        for (Reservation r : reservationsManager.getAllReservations()) {
+            if (r.getCustomerID().equals(customerID)) {
+                System.out.printf(" %-8s | %-18s | %-8s | %-6d | %-10.2f | %-14s%n",
+                        r.getCarID(),
+                        r.getCarModel(),
+                        r.getCarType(),
+                        r.getRentalDays(),
+                        r.getTotalCost(),
+                        r.getStatus());
+                found = true;
+            }
+        }
+
+        if (!found) System.out.println(" No rental history.");
+
         pause();
     }
 
