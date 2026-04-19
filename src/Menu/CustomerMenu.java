@@ -67,6 +67,7 @@ public class CustomerMenu {
             return false;
         }
 
+
         System.out.println("\n Welcome back, " + customer.getName() + "! (" + customer.getId() + ")");
         pause();
         return true;
