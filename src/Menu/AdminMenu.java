@@ -296,9 +296,22 @@ public class AdminMenu {
 
     // ================= REPORT =================
     private void viewReport() {
-        printHeader("REPORT");
         reportsManager.generateReport(reservationsManager.getAllReservations());
-        pause();
+
+        System.out.println("\n===== REPORT OPTIONS =====");
+        System.out.println("1. Delete a Report by Car ID");
+        System.out.println("0. Back");
+        int choice = input.getIntInput("Enter choice: ");
+
+        switch (choice) {
+            case 1 -> {
+                System.out.print("Enter Car ID to delete: ");
+                String carID = scanner.nextLine();
+                reportsManager.deleteReport(carID, reservationsManager); // pass reservationsManager
+            }
+            case 0 -> {}
+            default -> System.out.println("Invalid choice.");
+        }
     }
 
     // ================= MANAGE USERS =================

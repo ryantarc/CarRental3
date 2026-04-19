@@ -8,6 +8,7 @@ public class Luxury extends Car {
     public Luxury (String model, String carPlate, double dailyRate, CarStatus status, int seatingCapacity,
                    boolean hasSunroof){
         super(model, carPlate, dailyRate, status, seatingCapacity);
+        this.hasSunroof = hasSunroof;
         carType = CARTYPE;
         carID = "L" + String.format("%02d", count++);
     }
