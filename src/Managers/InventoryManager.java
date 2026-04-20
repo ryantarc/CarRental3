@@ -21,11 +21,10 @@ public class InventoryManager {
     }
     public void loadFromFile(){
         inventory=fm.loadFromFile(filename);
-
+        updateCarCounts();
         if (inventory.isEmpty()) {
             System.out.println("No existing data. Loading defaults...");
             loadDefaultCars();
-            saveToFile(); // save defaults so next run has data
         updateCarCounts();}
     }
     public void loadDefaultCars(){
@@ -45,7 +44,9 @@ public class InventoryManager {
         inventory.add(new SUV("Hyundai Santa Fe", "RVV4444", 380.00, Car.CarStatus.AVAILABLE, 7, true, true));
         inventory.add(new SUV("Proton X70", "TGB5555", 390.00, Car.CarStatus.AVAILABLE, 5, false, false));
         saveToFile();
-    }
+        updateCarCounts();
+
+}
     public void addCar(Car car) {
         inventory.add(car);
         saveToFile();

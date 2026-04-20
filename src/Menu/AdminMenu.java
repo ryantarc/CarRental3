@@ -139,12 +139,32 @@ public class AdminMenu {
     // ================= VIEW INVENTORY =================
     private void viewInventory() {
         printHeader("INVENTORY");
-        if (inventory.isEmpty()) {
-            System.out.println("\nInventory is empty.");
-            pause();
-            return;
-        }
-        inventory.displayInventory();
+        System.out.println(" Select Car Type:");
+        System.out.println(" 1. Display All Cars");
+        System.out.println(" 2. Economy");
+        System.out.println(" 3. Luxury");
+        System.out.println(" 4. SUV");
+        System.out.println(" 0. Exit");
+
+        int choice = input.getIntInput(" Choice: ");
+        do {
+            switch (choice) {
+                case 1 -> inventory.displayInventory();
+                case 2 -> inventory.displayInventory("ECONOMY");
+                case 3 -> inventory.displayInventory("LUXURY");
+                case 4 -> inventory.displayInventory("SUV");
+                default -> {
+                    System.out.println(" Invalid choice.");
+                    return;
+                }
+            }
+            if (inventory.isEmpty()) {
+                System.out.println("\nInventory is empty.");
+                pause();
+                return;
+            }
+        }while(choice==0);
+
         pause();
     }
 

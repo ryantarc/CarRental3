@@ -21,7 +21,6 @@ public class FileManager {
             return (ArrayList<T>) ois.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error loading file: " + filename);
             return new ArrayList<>();
         }
     }
