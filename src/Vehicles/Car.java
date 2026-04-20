@@ -86,7 +86,7 @@ public abstract class Car implements Serializable{
     @Override
     public String toString() {
         return String.format(
-                "%-5s | %-8s | %-12s | %-10s | RM%-8.2f | %-10s | Seats:%-2d",
+                "%-5s | %-8s | %-25s | %-10s | RM%-8.2f | %-10s | Seats:%-2d",
                 carID,
                 carType,
                 model,
